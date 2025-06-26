@@ -19,24 +19,25 @@ public class MDI_MenuPrincipal extends javax.swing.JFrame {
         jM_Productos = new javax.swing.JMenu();
         MI_Productos = new javax.swing.JMenuItem();
         MI_CategoriaProducto = new javax.swing.JMenuItem();
-        MI_Clientes = new javax.swing.JMenuItem();
-        MI_Proveedores = new javax.swing.JMenuItem();
-        MI_Empleados = new javax.swing.JMenuItem();
-        MI_Roles = new javax.swing.JMenuItem();
-        MI_MetodoPago = new javax.swing.JMenuItem();
         MI_ActivosFijos = new javax.swing.JMenuItem();
         jM_Ventas = new javax.swing.JMenu();
         MI_RealizarVenta = new javax.swing.JMenuItem();
-        MI_RealizarCompra = new javax.swing.JMenuItem();
-        Mi_GestionCaja = new javax.swing.JMenuItem();
+        MI_MetodoPago = new javax.swing.JMenuItem();
         jM_Compras = new javax.swing.JMenu();
         jMenuItem8 = new javax.swing.JMenuItem();
         jMenuItem9 = new javax.swing.JMenuItem();
         jMenuItem10 = new javax.swing.JMenuItem();
-        jMenuItem11 = new javax.swing.JMenuItem();
+        MI_RealizarCompra = new javax.swing.JMenuItem();
+        jM_Caja1 = new javax.swing.JMenu();
+        MI_Empleados = new javax.swing.JMenuItem();
+        MI_Roles = new javax.swing.JMenuItem();
         jM_Clientes = new javax.swing.JMenu();
+        MI_Clientes = new javax.swing.JMenuItem();
         jM_Proveedores = new javax.swing.JMenu();
+        MI_Proveedores = new javax.swing.JMenuItem();
         jM_Caja = new javax.swing.JMenu();
+        Mi_GestionCaja = new javax.swing.JMenuItem();
+        jMenuItem11 = new javax.swing.JMenuItem();
         jM_Reportes = new javax.swing.JMenu();
         jM_CerrarSesion = new javax.swing.JMenu();
         MI_CerrarSesion = new javax.swing.JMenuItem();
@@ -67,48 +68,6 @@ public class MDI_MenuPrincipal extends javax.swing.JFrame {
         });
         jM_Productos.add(MI_CategoriaProducto);
 
-        MI_Clientes.setMnemonic('p');
-        MI_Clientes.setText("Clientes");
-        MI_Clientes.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                MI_ClientesActionPerformed(evt);
-            }
-        });
-        jM_Productos.add(MI_Clientes);
-
-        MI_Proveedores.setMnemonic('d');
-        MI_Proveedores.setText("Proveedores");
-        MI_Proveedores.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                MI_ProveedoresActionPerformed(evt);
-            }
-        });
-        jM_Productos.add(MI_Proveedores);
-
-        MI_Empleados.setText("Empleados");
-        MI_Empleados.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                MI_EmpleadosActionPerformed(evt);
-            }
-        });
-        jM_Productos.add(MI_Empleados);
-
-        MI_Roles.setText("Roles");
-        MI_Roles.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                MI_RolesActionPerformed(evt);
-            }
-        });
-        jM_Productos.add(MI_Roles);
-
-        MI_MetodoPago.setText("Metodo de Pago");
-        MI_MetodoPago.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                MI_MetodoPagoActionPerformed(evt);
-            }
-        });
-        jM_Productos.add(MI_MetodoPago);
-
         MI_ActivosFijos.setText("Activos Fijos");
         MI_ActivosFijos.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -129,21 +88,13 @@ public class MDI_MenuPrincipal extends javax.swing.JFrame {
         });
         jM_Ventas.add(MI_RealizarVenta);
 
-        MI_RealizarCompra.setText("Realizar Compra");
-        MI_RealizarCompra.addActionListener(new java.awt.event.ActionListener() {
+        MI_MetodoPago.setText("Metodo de Pago");
+        MI_MetodoPago.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                MI_RealizarCompraActionPerformed(evt);
+                MI_MetodoPagoActionPerformed(evt);
             }
         });
-        jM_Ventas.add(MI_RealizarCompra);
-
-        Mi_GestionCaja.setText("Gestion Caja");
-        Mi_GestionCaja.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                Mi_GestionCajaActionPerformed(evt);
-            }
-        });
-        jM_Ventas.add(Mi_GestionCaja);
+        jM_Ventas.add(MI_MetodoPago);
 
         menuBar.add(jM_Ventas);
 
@@ -163,23 +114,80 @@ public class MDI_MenuPrincipal extends javax.swing.JFrame {
         jMenuItem10.setText("Stock de Productos");
         jM_Compras.add(jMenuItem10);
 
+        MI_RealizarCompra.setText("Realizar Compra");
+        MI_RealizarCompra.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                MI_RealizarCompraActionPerformed(evt);
+            }
+        });
+        jM_Compras.add(MI_RealizarCompra);
+
+        menuBar.add(jM_Compras);
+
+        jM_Caja1.setText("Empleados");
+
+        MI_Empleados.setText("Empleados");
+        MI_Empleados.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                MI_EmpleadosActionPerformed(evt);
+            }
+        });
+        jM_Caja1.add(MI_Empleados);
+
+        MI_Roles.setText("Roles");
+        MI_Roles.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                MI_RolesActionPerformed(evt);
+            }
+        });
+        jM_Caja1.add(MI_Roles);
+
+        menuBar.add(jM_Caja1);
+
+        jM_Clientes.setText("Clientes");
+
+        MI_Clientes.setMnemonic('p');
+        MI_Clientes.setText("Clientes");
+        MI_Clientes.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                MI_ClientesActionPerformed(evt);
+            }
+        });
+        jM_Clientes.add(MI_Clientes);
+
+        menuBar.add(jM_Clientes);
+
+        jM_Proveedores.setText("Proveedores");
+
+        MI_Proveedores.setMnemonic('d');
+        MI_Proveedores.setText("Proveedores");
+        MI_Proveedores.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                MI_ProveedoresActionPerformed(evt);
+            }
+        });
+        jM_Proveedores.add(MI_Proveedores);
+
+        menuBar.add(jM_Proveedores);
+
+        jM_Caja.setText("Caja");
+
+        Mi_GestionCaja.setText("Gestion Caja");
+        Mi_GestionCaja.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                Mi_GestionCajaActionPerformed(evt);
+            }
+        });
+        jM_Caja.add(Mi_GestionCaja);
+
         jMenuItem11.setText("Movimientos de Caja");
         jMenuItem11.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jMenuItem11ActionPerformed(evt);
             }
         });
-        jM_Compras.add(jMenuItem11);
+        jM_Caja.add(jMenuItem11);
 
-        menuBar.add(jM_Compras);
-
-        jM_Clientes.setText("Clientes");
-        menuBar.add(jM_Clientes);
-
-        jM_Proveedores.setText("Proveedores");
-        menuBar.add(jM_Proveedores);
-
-        jM_Caja.setText("Caja");
         menuBar.add(jM_Caja);
 
         jM_Reportes.setText("Reportes");
@@ -214,9 +222,10 @@ public class MDI_MenuPrincipal extends javax.swing.JFrame {
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(desktopPane, javax.swing.GroupLayout.DEFAULT_SIZE, 991, Short.MAX_VALUE))
+                .addComponent(desktopPane, javax.swing.GroupLayout.DEFAULT_SIZE, 985, Short.MAX_VALUE)
+                .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -344,6 +353,7 @@ public class MDI_MenuPrincipal extends javax.swing.JFrame {
     private javax.swing.JMenuItem Mi_GestionCaja;
     private javax.swing.JDesktopPane desktopPane;
     private javax.swing.JMenu jM_Caja;
+    private javax.swing.JMenu jM_Caja1;
     private javax.swing.JMenu jM_CerrarSesion;
     private javax.swing.JMenu jM_Clientes;
     private javax.swing.JMenu jM_Compras;

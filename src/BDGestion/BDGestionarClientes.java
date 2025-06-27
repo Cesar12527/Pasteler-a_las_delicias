@@ -23,15 +23,13 @@ public class BDGestionarClientes implements ICRUD{
             rs = ps.executeQuery();
             
             while (rs.next()) {                
-                int id = rs.getInt("id");
-                String nombres = rs.getString("nombres");
+                int id = rs.getInt("idCliente");
+                String nombres = rs.getString("nombreCliente");
                 String apellidos = rs.getString("apellidos");
-                String dni = rs.getString("dni");
+                String dni = rs.getString("documento");
                 String telefono = rs.getString("telefono");
-                String direccion = rs.getString("direccion");
-                String correo = rs.getString("correo");
                 
-                Cliente objC = new Cliente(id,nombres,apellidos,dni,telefono,direccion,correo);
+                Cliente objC = new Cliente(id,nombres,apellidos,dni,telefono);
                 arrClientes.add(objC);
             }
             
@@ -50,14 +48,12 @@ public class BDGestionarClientes implements ICRUD{
         
         try {
             this.con  = Conexion.conectar();
-            String sql = "INSERT INTO cliente(nombres, apellidos,dni,telefono,direccion,correo) VALUES(?,?,?,?,?,?)";
+            String sql = "INSERT INTO cliente(nombreCliente, apellidos,documento,telefono) VALUES(?,?,?,?)";
             ps = this.con.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS );
             ps.setString(1, objC.getNombre());
             ps.setString(2, objC.getApellidos());
             ps.setString(3, objC.getDni());
             ps.setString(4, objC.getTelefono());
-            ps.setString(5, objC.getDireccion());
-            ps.setString(6, objC.getCorreo());
             ps.executeUpdate();
             
             rs = ps.getGeneratedKeys();
@@ -77,15 +73,13 @@ public class BDGestionarClientes implements ICRUD{
     
         try {
             this.con = Conexion.conectar();
-            String sql = "UPDATE cliente SET nombre=?, apellidos=?, dni=?, telefono=?, direccion=?, correo=? WHERE id=?";
+            String sql = "UPDATE cliente SET nombreCliente=?, apellidos=?, documento=?, telefono=? WHERE idCliente=?";
             ps = this.con.prepareStatement(sql);
             ps.setString(1, objC.getNombre());
             ps.setString(2, objC.getApellidos());
             ps.setString(3, objC.getDni());
             ps.setString(4, objC.getTelefono());
-            ps.setString(5, objC.getDireccion());
-            ps.setString(6, objC.getCorreo());
-            ps.setInt(7, id); // ID al final para el WHERE
+            ps.setInt(5, id); // ID al final para el WHERE
             ps.executeUpdate();
 
         } catch (Exception e) {
@@ -93,19 +87,53 @@ public class BDGestionarClientes implements ICRUD{
         } 
     }
 
-    @Override
-    public void eliminar(int id) throws Exception {
-        try {
-            this.con = Conexion.conectar();
-            String sql = "DELETE FROM cliente WHERE id=?";
-            ps = this.con.prepareStatement(sql);
-            ps.setInt(1, id);
-            ps.executeUpdate();
+   @Override
+public void eliminar(int id) throws Exception {
+    try {
+        this.con = Conexion.conectar();
+        this.con.setAutoCommit(false); // Iniciar transacción
 
-        } catch (Exception e) {
-            throw e;
-        } 
+        // 1. Obtener todas las ventas del cliente
+        String sqlVentasIds = "SELECT idVenta FROM venta WHERE idCliente=?";
+        ps = this.con.prepareStatement(sqlVentasIds);
+        ps.setInt(1, id);
+        rs = ps.executeQuery();
+
+        ArrayList<Integer> ventasIds = new ArrayList<>();
+        while (rs.next()) {
+            ventasIds.add(rs.getInt("idVenta"));
+        }
+
+        // 2. Eliminar los detalles de cada venta
+        for (Integer idVenta : ventasIds) {
+            String sqlDelDetalle = "DELETE FROM detalleventa WHERE idVenta=?";
+            ps = this.con.prepareStatement(sqlDelDetalle);
+            ps.setInt(1, idVenta);
+            ps.executeUpdate();
+        }
+
+        // 3. Eliminar las ventas del cliente
+        String sqlDelVentas = "DELETE FROM venta WHERE idCliente=?";
+        ps = this.con.prepareStatement(sqlDelVentas);
+        ps.setInt(1, id);
+        ps.executeUpdate();
+
+        // 4. Eliminar el cliente
+        String sqlDelCliente = "DELETE FROM cliente WHERE idCliente=?";
+        ps = this.con.prepareStatement(sqlDelCliente);
+        ps.setInt(1, id);
+        ps.executeUpdate();
+
+        this.con.commit();//confirma la transacción
+    } catch (Exception e) {
+        if (this.con != null) this.con.rollback();
+        throw e;
+    } finally {
+        if (ps != null) ps.close();
+        if (rs != null) rs.close();
+        if (con != null) con.close();
     }
+} 
 
     @Override
     public Object obtener(int id) throws Exception {
@@ -114,18 +142,16 @@ public class BDGestionarClientes implements ICRUD{
         PreparedStatement ps = null;
         try {
             this.con = Conexion.conectar();
-            String sql = "SELECT * FROM cliente WHERE id= ?";
+            String sql = "SELECT * FROM cliente WHERE idCliente= ?";
             ps = this.con.prepareStatement(sql);
             ps.setInt(1, id);
             rs = ps.executeQuery();   
             if(rs.next()) {                
-                objC.setId(rs.getInt("id"));
-                objC.setNombre(rs.getString("nombres"));
+                objC.setId(rs.getInt("idCliente"));
+                objC.setNombre(rs.getString("nombreCliente"));
                 objC.setApellidos(rs.getString("apellidos"));
-                objC.setDni(rs.getString("dni"));
-                objC.setTelefono(rs.getString("telefono"));
-                objC.setCorreo(rs.getString("correo"));
-                objC.setDireccion(rs.getString("direccion"));     
+                objC.setDni(rs.getString("documento"));
+                objC.setTelefono(rs.getString("telefono"));     
             }else{
                 objC = null;        
             }

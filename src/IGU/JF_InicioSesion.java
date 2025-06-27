@@ -137,13 +137,10 @@ public class JF_InicioSesion extends javax.swing.JFrame {
         if (user != null) {
             
             if(user.getTiporol().getId() == 1){
-                JOptionPane.showMessageDialog(this, "¡Bienvenido " + user.getUsuario() + "!");
                 this.dispose();
                 new MDI_MenuPrincipal().setVisible(true);
                 
             }else{
-                
-                JOptionPane.showMessageDialog(this, "¡Bienvenido " + user.getUsuario() + "!");
                 this.dispose();
                 new Vendedor().setVisible(true);
             }

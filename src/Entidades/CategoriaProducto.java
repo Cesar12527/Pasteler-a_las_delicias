@@ -5,9 +5,14 @@ public class CategoriaProducto {
     private String nombre,descripcion;
 
     public CategoriaProducto() {
+        
     }
 
-    public CategoriaProducto(String nombre, String descripcion) {
+    public CategoriaProducto(String nombreCategoria, String descripcionCategoria) {
+    }
+
+    public CategoriaProducto(int id, String nombre, String descripcion) {
+        this.id = id;
         this.nombre = nombre;
         this.descripcion = descripcion;
     }
@@ -40,5 +45,9 @@ public class CategoriaProducto {
     public String toString() {
         return this.nombre ;
     }
-
+    
+public String verDatos() {
+            return "Nombre: " + nombre + "\n"+
+                "Descripción: " + descripcion+ "\n" ;
+    }
 }

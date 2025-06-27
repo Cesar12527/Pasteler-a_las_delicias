@@ -8,12 +8,13 @@ import javax.swing.table.AbstractTableModel;
 public class ModeloTablaCliente extends AbstractTableModel {
   private ArrayList<Cliente> listadoClientes = null;
 
-    public ArrayList getListadoClientes() {
+    public ArrayList<Cliente> getListadoClientes() {
         return listadoClientes;
     }
 
-    public void setListadoClientes(ArrayList listadoClientes) {
+    public void setListadoClientes(ArrayList<Cliente> listadoClientes) {
         this.listadoClientes = listadoClientes;
+        fireTableDataChanged();
     }
 
     @Override
@@ -30,7 +31,7 @@ public class ModeloTablaCliente extends AbstractTableModel {
        return 4;
     }
 
-    @Override
+
     public String getColumnName(int column) {
         String nombreCol = "";
         
@@ -65,5 +66,24 @@ public class ModeloTablaCliente extends AbstractTableModel {
       }
       return celda;
     }
-      
+    
+     public void addCliente(Cliente cli) {
+    if (this.listadoClientes == null) {
+        this.listadoClientes = new ArrayList<>();
+    }
+    this.listadoClientes.add(cli);
+    fireTableDataChanged();  // Notifica a la tabla que el modelo cambió
+}
+     
+     
+
+      public Cliente getCliente(int indiceSeleccionado) {
+        Cliente objp = null;
+        
+        if(this.listadoClientes != null) {
+            objp = this.listadoClientes.get(indiceSeleccionado);
+        }
+        
+        return objp;
+    }
 }

@@ -10,7 +10,7 @@ import java.sql.*;
 import java.util.ArrayList;
 
 public class BDGestionarProductos implements ICRUD{
-
+private Connection con = null;
     @Override
     public ArrayList listar() throws Exception {
         
@@ -86,11 +86,7 @@ public class BDGestionarProductos implements ICRUD{
     @Override
     public void actualizar(int id, Object object) throws Exception {
         Producto objP = (Producto) object;
-        String sql ="""
-                    UPDATE producto SET 
-                nombreProducto=?, precioUnitario=?, stock=?,
-                unidadMedida=?, id_tipo_categoria= ? WHERE id=?
-                 """;
+        String sql ="UPDATE producto SET nombreProducto=?, precioUnitario=?, stock=?, unidadMedida=?, id_tipo_categoria= ? WHERE idProducto=?";
         try (
            Connection con = Conexion.conectar();
            PreparedStatement ps = con.prepareStatement(sql)
@@ -111,16 +107,27 @@ public class BDGestionarProductos implements ICRUD{
 
     @Override
     public void eliminar(int id) throws Exception {
-        String sql = "UPDATE producto SET estado=0 WHERE idProducto=?";
-        
-        try (Connection con = Conexion.conectar();
-            PreparedStatement ps = con.prepareStatement(sql)
-            ){
+        PreparedStatement ps = null;
+        try{
+            con = Conexion.conectar();
+            String sql = "DELETE FROM producto WHERE idProducto = ?";
+            ps = this.con.prepareStatement(sql);
             ps.setInt(1, id);
-            ps.executeUpdate();
-        } catch (Exception e) {
+            
+            int filasAfectadas = ps.executeUpdate();
+
+            if (filasAfectadas > 0) {
+                System.out.println("Producto con ID " + id + " fue marcado como inactivo.");
+            } else {
+                System.out.println("No se encontró el Producto con ID " + id + " para marcarlo como inactivo.");
+            }
+            
+        }catch(Exception e){
             throw e;
-        } 
+        }finally{
+            con = null;
+            ps = null;
+        }
     }
 
     @Override

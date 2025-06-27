@@ -13,11 +13,11 @@ import javax.swing.JOptionPane;
 
 public class JIF_GestionProductos extends javax.swing.JInternalFrame {
     ModeloComboCategoriaProducto modeloComboCP = new ModeloComboCategoriaProducto();
-    
+    private int indexElemSelecc = -1;
+
     ModeloTablaGestionProducto modeloGestionProd = new ModeloTablaGestionProducto();
-    private int idActualizar =-1;
     //gestiones Bd
-    private BDGestionarProductos bd_gestProd = new BDGestionarProductos();
+
     
     public JIF_GestionProductos() {
         initComponents();
@@ -39,12 +39,12 @@ public class JIF_GestionProductos extends javax.swing.JInternalFrame {
         txtPrecio = new javax.swing.JTextField();
         jLabel9 = new javax.swing.JLabel();
         btnGuardar = new javax.swing.JButton();
-        jButton2 = new javax.swing.JButton();
+        bntNuevo = new javax.swing.JButton();
         jCombBoxCategoria = new javax.swing.JComboBox<>();
         btnCancelar = new javax.swing.JButton();
         jPanel3 = new javax.swing.JPanel();
         jScrollPane1 = new javax.swing.JScrollPane();
-        jTable1 = new javax.swing.JTable();
+        tblProductos = new javax.swing.JTable();
         btnEliminar = new javax.swing.JButton();
         btnEditar = new javax.swing.JButton();
 
@@ -77,11 +77,11 @@ public class JIF_GestionProductos extends javax.swing.JInternalFrame {
             }
         });
 
-        jButton2.setFont(new java.awt.Font("Segoe UI", 1, 16)); // NOI18N
-        jButton2.setText("Nuevo");
-        jButton2.addActionListener(new java.awt.event.ActionListener() {
+        bntNuevo.setFont(new java.awt.Font("Segoe UI", 1, 16)); // NOI18N
+        bntNuevo.setText("Nuevo");
+        bntNuevo.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton2ActionPerformed(evt);
+                bntNuevoActionPerformed(evt);
             }
         });
 
@@ -89,6 +89,11 @@ public class JIF_GestionProductos extends javax.swing.JInternalFrame {
 
         btnCancelar.setFont(new java.awt.Font("Segoe UI", 1, 16)); // NOI18N
         btnCancelar.setText("Cancelar");
+        btnCancelar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnCancelarActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
@@ -118,7 +123,7 @@ public class JIF_GestionProductos extends javax.swing.JInternalFrame {
                                         .addComponent(txtStock))))
                             .addGroup(jPanel2Layout.createSequentialGroup()
                                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                                    .addComponent(jButton2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                    .addComponent(bntNuevo, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                     .addComponent(btnGuardar, javax.swing.GroupLayout.DEFAULT_SIZE, 104, Short.MAX_VALUE)
                                     .addComponent(btnCancelar, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                                 .addGap(15, 15, 15)))))
@@ -146,7 +151,7 @@ public class JIF_GestionProductos extends javax.swing.JInternalFrame {
                 .addGap(43, 43, 43)
                 .addComponent(btnGuardar, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(30, 30, 30)
-                .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(bntNuevo, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(37, 37, 37)
                 .addComponent(btnCancelar, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
@@ -154,11 +159,16 @@ public class JIF_GestionProductos extends javax.swing.JInternalFrame {
 
         jPanel3.setBorder(javax.swing.BorderFactory.createTitledBorder("Listado de Productos"));
 
-        jTable1.setModel(this.modeloGestionProd);
-        jScrollPane1.setViewportView(jTable1);
+        tblProductos.setModel(this.modeloGestionProd);
+        jScrollPane1.setViewportView(tblProductos);
 
         btnEliminar.setFont(new java.awt.Font("Segoe UI", 1, 16)); // NOI18N
         btnEliminar.setText("Eliminar");
+        btnEliminar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnEliminarActionPerformed(evt);
+            }
+        });
 
         btnEditar.setFont(new java.awt.Font("Segoe UI", 1, 16)); // NOI18N
         btnEditar.setText("Editar");
@@ -226,50 +236,88 @@ public class JIF_GestionProductos extends javax.swing.JInternalFrame {
             objP.setPrecioUnitario(precio);
             int stock = Integer.parseInt(this.txtStock.getText());
             objP.setStock(stock);
-            //ComboBox
             CategoriaProducto cp = this.modeloComboCP.getSeleccionado();
             objP.setCategoriaProducto(cp);
-            //ComboBox
+
+             BDGestionarProductos gestCli = new BDGestionarProductos();
+            if (this.indexElemSelecc >= 0 ){ // Hay elem cargado en FORM : Editando!
+                Producto cliEdit = (Producto) this.modeloGestionProd.getProducto(this.indexElemSelecc);
+                gestCli.actualizar( cliEdit.getId() , objP);
             
-            if(this.idActualizar == -1){
-                this.bd_gestProd.crear(objP);
-                this.cargarGestionTablaProducto();
-                this.limpiarFormulario();
-                this.idActualizar = -1;
-            }else{
-                this.bd_gestProd.actualizar(idActualizar, objP);
-                this.cargarGestionTablaProducto();
-                this.limpiarFormulario();
-                this.idActualizar = -1;
+            } else {    // El elem es nuevo: Crear!
+                int id = gestCli.crear(objP);
+                objP.setId(id);
+                 this.modeloGestionProd.addProducto(objP);
+                 
             }
+            cargarGestionTablaProducto();
+            this.limpiarFormulario();
+            this.activarControles(false);
             
-        }catch (IllegalArgumentException e) {
-            JOptionPane.showMessageDialog(this, e.getMessage(), "Validación", JOptionPane.WARNING_MESSAGE);
-        }catch(Exception e){
-            JOptionPane.showMessageDialog(this, "Error inesperado: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(this, e.getMessage());
+      
+           
         }
-        this.limpiarFormulario();
-        this.activarControles(false);
+       
+
     }//GEN-LAST:event_btnGuardarActionPerformed
 
-    private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
-        // TODO add your handling code here:
-        this.limpiarFormulario();
+    private void bntNuevoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bntNuevoActionPerformed
+
         this.activarControles(true);
-    }//GEN-LAST:event_jButton2ActionPerformed
+    }//GEN-LAST:event_bntNuevoActionPerformed
 
     private void btnEditarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEditarActionPerformed
-        // TODO add your handling code here:
+         this.indexElemSelecc = this.tblProductos.getSelectedRow();
+        if(this.indexElemSelecc < 0) return;
+        
+        Producto objC = modeloGestionProd.getProducto(indexElemSelecc);
+        try {
+            BDGestionarProductos bdCli = new BDGestionarProductos();
+            objC = (Producto) bdCli.obtener(objC.getId() );
+            
+            this.txtNombreProd.setText( objC.getNombre() );
+            this.txtPrecio.setText( String.valueOf(objC.getPrecioUnitario()));
+            this.txtStock.setText( String.valueOf((int) objC.getStock()));
+            this.activarControles(true);
+        } catch (Exception e) {
+        }
         this.activarControles(true);
     }//GEN-LAST:event_btnEditarActionPerformed
 
+    private void btnCancelarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCancelarActionPerformed
+        this.activarControles(false);
+    }//GEN-LAST:event_btnCancelarActionPerformed
+
+    private void btnEliminarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEliminarActionPerformed
+        
+      this.indexElemSelecc = this.tblProductos.getSelectedRow();
+    if (indexElemSelecc == -1) {
+        JOptionPane.showMessageDialog(this, "Seleccione un cliente de la tabla.", "Advertencia", JOptionPane.WARNING_MESSAGE);
+        return;
+    } else{
+
+    JOptionPane.showConfirmDialog(this, "¿Está seguro de eliminar este cliente?", "Confirmar", JOptionPane.YES_NO_OPTION);
+    }
+    try {
+        Producto cli = modeloGestionProd.getProducto(indexElemSelecc); // obtén el cliente del modelo de tabla
+        BDGestionarProductos bd = new BDGestionarProductos();
+        bd.eliminar(cli.getId());
+        cargarGestionTablaProducto();       // recarga la tabla con datos actualizados
+
+    } catch (Exception e) {
+        JOptionPane.showMessageDialog(this, "Error al eliminar: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+    }
+    }//GEN-LAST:event_btnEliminarActionPerformed
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton bntNuevo;
     private javax.swing.JButton btnCancelar;
     private javax.swing.JButton btnEditar;
     private javax.swing.JButton btnEliminar;
     private javax.swing.JButton btnGuardar;
-    private javax.swing.JButton jButton2;
     private javax.swing.JComboBox<String> jCombBoxCategoria;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel6;
@@ -278,7 +326,7 @@ public class JIF_GestionProductos extends javax.swing.JInternalFrame {
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel3;
     private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JTable jTable1;
+    private javax.swing.JTable tblProductos;
     private javax.swing.JTextField txtNombreProd;
     private javax.swing.JTextField txtPrecio;
     private javax.swing.JTextField txtStock;
@@ -287,6 +335,7 @@ public class JIF_GestionProductos extends javax.swing.JInternalFrame {
     private void cargarGestionTablaProducto() {
         ArrayList arrPro = null;
         try {
+            BDGestionarProductos bd_gestProd = new BDGestionarProductos();
             arrPro = bd_gestProd.listar();
             this.modeloGestionProd.setListadoProducto(arrPro);
         } catch (Exception e) {

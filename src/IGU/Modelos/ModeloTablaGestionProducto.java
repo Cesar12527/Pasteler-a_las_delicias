@@ -73,6 +73,27 @@ public class ModeloTablaGestionProducto extends AbstractTableModel{
       return celda;
     }
     
+
+
     
+    public void addProducto(Producto p) {
+    if (this.listadoProducto == null) {
+        this.listadoProducto = new ArrayList<>();
+    }
+    this.listadoProducto.add(p);
+    fireTableDataChanged();  // Notifica a la tabla que el modelo cambió
+}
+
+
+    public Producto getProducto(int indiceSeleccionado) {
+        Producto objp = null;
+        
+        if(this.listadoProducto != null) {
+            objp = this.listadoProducto.get(indiceSeleccionado);
+        }
+        
+        return objp;
+    }
+
     
 }

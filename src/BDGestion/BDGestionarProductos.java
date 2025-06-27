@@ -35,7 +35,6 @@ private Connection con = null;
                 Double precio = rs.getDouble("precioUnitario");
                 int stock = rs.getInt("stock");
                 String unidadMedida = rs.getString("unidadMedida");
-                
                 String nombreCategoria = rs.getString("nombreCategoria");
                 String descripcionCategoria = rs.getString("descripcionCategoria");
                 

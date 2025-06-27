@@ -6,10 +6,14 @@ public class CategoriaProducto {
 
     public CategoriaProducto() {
         
+        
     }
 
     public CategoriaProducto(String nombreCategoria, String descripcionCategoria) {
+        this.nombre=nombreCategoria;
+        this.descripcion=descripcionCategoria;
     }
+
 
     public CategoriaProducto(int id, String nombre, String descripcion) {
         this.id = id;

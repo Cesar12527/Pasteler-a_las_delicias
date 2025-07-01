@@ -22,7 +22,7 @@ public class BDComboboxCategoriaProducto implements ICRUD{
         while (rs.next()) {
             CategoriaProducto objCP = new CategoriaProducto();
             objCP.setId(rs.getInt("idCategoria"));
-            objCP.setNombre(rs.getString("nombreCategoria"));
+            objCP.setNombrecat(rs.getString("nombreCategoria"));
             objCP.setDescripcion(rs.getString("descripcionCategoria"));
             arrCP.add(objCP);
         }
@@ -44,7 +44,7 @@ public class BDComboboxCategoriaProducto implements ICRUD{
             PreparedStatement ps = con.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS) 
             ){      
             ps.setInt(1, objCP.getId());
-            ps.setString(2, objCP.getNombre());
+            ps.setString(2, objCP.getNombrecat());
             ps.setString(3, objCP.getDescripcion());
             ps.executeUpdate();
             try( ResultSet rs = ps.getGeneratedKeys()
@@ -67,9 +67,9 @@ public class BDComboboxCategoriaProducto implements ICRUD{
            Connection con = Conexion.conectar();
            PreparedStatement ps = con.prepareStatement(sql)
             ){
-            ps.setString(1, objCP.getNombre());
+            ps.setString(1, objCP.getNombrecat());
             ps.setString(2, objCP.getDescripcion());
-            ps.setInt(7, id); // ID al final para el WHERE
+            ps.setInt(3, id); // ID al final para el WHERE
             ps.executeUpdate();
 
         } catch (Exception e) {
@@ -105,7 +105,7 @@ public class BDComboboxCategoriaProducto implements ICRUD{
                 if(rs.next()) {
                     objCP = new CategoriaProducto();
                     objCP.setId(rs.getInt("idCategoria"));
-                    objCP.setNombre(rs.getString("nombreCategoria"));
+                    objCP.setNombrecat(rs.getString("nombreCategoria"));
                     objCP.setDescripcion(rs.getString("descripcionCategoria"));    
                 }
             }

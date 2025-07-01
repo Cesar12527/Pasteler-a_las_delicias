@@ -7,16 +7,23 @@ import java.util.ArrayList;
 import javax.swing.JOptionPane;
 
 public class JIF_GestionActivosFijos extends javax.swing.JInternalFrame {
-
+   private static JIF_GestionActivosFijos instancia;
    ModeloTablaActivoFijo mtc = new ModeloTablaActivoFijo();
     private int indexElemSelecc = -1;
-    public JIF_GestionActivosFijos() {
+    
+    private JIF_GestionActivosFijos() {
         initComponents();
         this.cargarTabla();
         this.limpiarFormulario();
         this.activarControles(false);
     }
-
+public static JIF_GestionActivosFijos getInstancia(){
+        
+       if( instancia == null || instancia.isClosed() ){
+            instancia = new JIF_GestionActivosFijos();
+       } 
+       return instancia;
+    }
    
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents

@@ -129,35 +129,59 @@ private Connection con = null;
         }
     }
 
-    @Override
-    public Object obtener(int id) throws Exception {
-        Producto objC = new Producto();
-        String sql = "SELECT * FROM producto WHERE idProducto= ?";
-
-        try(
-            Connection con = Conexion.conectar();
-            PreparedStatement ps = con.prepareStatement(sql)
-            ){
-            ps.setInt(1, id);
-            try (ResultSet rs = ps.executeQuery()
-                 ){
-
-                if(rs.next()) {
-                    objC = new Producto();
-                    objC.setId(rs.getInt("idProducto"));
-                    objC.setNombre(rs.getString("nombreProducto"));
-                    objC.setPrecioUnitario(rs.getDouble("precioUnitario"));
-                    objC.setStock(rs.getInt("stock"));
-                    objC.setUnidadMedida(rs.getString("unidadMedida"));
-
-                } else {
-                objC = null;
-            }
-            }
-        } catch (Exception e) {
-            throw e;
-        }
-        return objC;
+   @Override
+    public Object obtener(int nombre) throws Exception {
+        throw new UnsupportedOperationException("Not supported yet."); 
     }
     
+    public Object obtenerporNombre(String nombre) throws Exception {
+    Producto objC = null;
+    String sql = """
+        SELECT p.idProducto, p.nombreProducto, p.precioUnitario, p.stock, p.unidadMedida, p.id_tipo_categoria,
+               cp.idCategoria, cp.nombreCategoria, cp.descripcionCategoria
+        FROM producto p
+        INNER JOIN categoriaproducto cp ON p.id_tipo_categoria = cp.idCategoria
+        WHERE p.nombreProducto = ?
+    """;
+
+    try (
+        Connection con = Conexion.conectar();
+        PreparedStatement ps = con.prepareStatement(sql)
+    ) {
+        ps.setString(1, nombre);
+        try (ResultSet rs = ps.executeQuery()) {
+            if (rs.next()) {
+                CategoriaProducto cat = new CategoriaProducto();
+                cat.setId(rs.getInt("idCategoria"));
+                cat.setNombrecat(rs.getString("nombreCategoria"));
+                cat.setDescripcion(rs.getString("descripcionCategoria"));
+
+                objC = new Producto();
+                objC.setId(rs.getInt("idProducto"));
+                objC.setNombre(rs.getString("nombreProducto"));
+                objC.setPrecioUnitario(rs.getDouble("precioUnitario"));
+                objC.setStock(rs.getInt("stock"));
+                objC.setUnidadMedida(rs.getString("unidadMedida"));
+                objC.setCategoriaProducto(cat);
+            }
+        }
+    } catch (Exception e) {
+        throw e;
+    }
+
+    return objC;
+}
+
+    public void actualizarStock(int idProducto, int cantidadVendida) throws Exception {
+    String sql = "UPDATE producto SET stock = stock - ? WHERE idProducto = ?";
+    try (Connection con = Conexion.conectar();
+         PreparedStatement ps = con.prepareStatement(sql)) {
+        ps.setInt(1, cantidadVendida);
+        ps.setInt(2, idProducto);
+        ps.executeUpdate();
+    }
+}
+    
+    
+   
 }

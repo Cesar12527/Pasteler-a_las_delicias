@@ -61,7 +61,7 @@ public class Cliente {
 
     @Override
     public String toString() {
-        return  this.apellidos + " " + this.nombre + " - " + this.dni;
+        return  this.nombre;
     }
     
     public String verDatos() {

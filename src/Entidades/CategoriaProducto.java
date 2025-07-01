@@ -2,22 +2,22 @@
 package Entidades;
 public class CategoriaProducto {
     private int id;
-    private String nombre,descripcion;
+    private String nombrecat,descripcion;
 
     public CategoriaProducto() {
         
         
     }
 
-    public CategoriaProducto(String nombreCategoria, String descripcionCategoria) {
-        this.nombre=nombreCategoria;
+    public CategoriaProducto(String nombrecat, String descripcionCategoria) {
+        this.nombrecat=nombrecat;
         this.descripcion=descripcionCategoria;
     }
 
 
-    public CategoriaProducto(int id, String nombre, String descripcion) {
+    public CategoriaProducto(int id, String nombrecat, String descripcion) {
         this.id = id;
-        this.nombre = nombre;
+        this.nombrecat = nombrecat;
         this.descripcion = descripcion;
     }
 
@@ -29,12 +29,12 @@ public class CategoriaProducto {
         this.id = id;
     }
 
-    public String getNombre() {
-        return nombre;
+    public String getNombrecat() {
+        return nombrecat;
     }
 
-    public void setNombre(String nombre) {
-        this.nombre = nombre;
+    public void setNombrecat(String nombre) {
+        this.nombrecat = nombre;
     }
 
     public String getDescripcion() {
@@ -47,11 +47,7 @@ public class CategoriaProducto {
 
     @Override
     public String toString() {
-        return this.nombre ;
+        return this.nombrecat ;
     }
     
-public String verDatos() {
-            return "Nombre: " + nombre + "\n"+
-                "Descripción: " + descripcion+ "\n" ;
-    }
 }

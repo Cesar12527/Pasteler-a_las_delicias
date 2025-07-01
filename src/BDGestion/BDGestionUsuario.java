@@ -5,9 +5,32 @@ import BaseDatos.Conexion;
 import BaseDatos.Seguridad;
 import Entidades.Usuario;
 import java.sql.*;
+import java.util.ArrayList;
 
 public class BDGestionUsuario {
-    
+    public ArrayList<Usuario> listar() throws Exception {
+        ArrayList<Usuario> lista = new ArrayList<>();
+        String sql = "SELECT * FROM usuario";
+
+        try (Connection con = Conexion.conectar();
+             PreparedStatement ps = con.prepareStatement(sql);
+             ResultSet rs = ps.executeQuery()) {
+
+            while (rs.next()) {
+                Usuario u = new Usuario();
+                u.setId(rs.getInt("id"));
+                u.setUsuario(rs.getString("usuario"));
+                u.setClaveHash(rs.getString("clave"));
+                lista.add(u);
+            }
+
+        } catch (Exception e) {
+            throw e;
+        }
+
+        return lista;
+    }
+
     public boolean crearUsuario(Usuario usuario) throws Exception {
         String sql = "INSERT INTO usuario (usuario, clave) VALUES (?, ?)";
 

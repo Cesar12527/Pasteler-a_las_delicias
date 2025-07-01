@@ -6,11 +6,17 @@ import Entidades.Usuario;
 import javax.swing.JOptionPane;
 
 public class JIF_CrearUsuario extends javax.swing.JInternalFrame {
-
-    public JIF_CrearUsuario() {
+private static JIF_CrearUsuario instancia;
+    private JIF_CrearUsuario() {
         initComponents();
     }
-
+ public static JIF_CrearUsuario getInstancia(){
+        
+       if( instancia == null || instancia.isClosed() ){
+            instancia = new JIF_CrearUsuario();
+       } 
+       return instancia;
+    }
 
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents

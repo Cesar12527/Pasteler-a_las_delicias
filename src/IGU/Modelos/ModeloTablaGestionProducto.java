@@ -57,7 +57,7 @@ public class ModeloTablaGestionProducto extends AbstractTableModel{
         switch (columnIndex) {
             case 0 : celda = objP.getNombre(); break;
             case 1 : celda = (objP.getCategoriaProducto() != null) 
-                        ? objP.getCategoriaProducto().getNombre()
+                        ? objP.getCategoriaProducto().getNombrecat()
                         : "Sin categoría"; break;
             case 2 : celda = (objP.getCategoriaProducto() != null) 
                         ? objP.getCategoriaProducto().getDescripcion()

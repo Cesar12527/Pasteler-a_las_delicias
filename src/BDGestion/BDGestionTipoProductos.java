@@ -49,7 +49,7 @@ public class BDGestionTipoProductos implements ICRUD{
             this.con  = Conexion.conectar();
             String sql = "INSERT INTO categoriaproducto(nombreCategoria, descripcionCategoria) VALUES(?,?)";
             ps = this.con.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS );
-            ps.setString(1, objC.getNombre());
+            ps.setString(1, objC.getNombrecat());
             ps.setString(2, objC.getDescripcion());            
             ps.executeUpdate();
             
@@ -72,7 +72,7 @@ public class BDGestionTipoProductos implements ICRUD{
             this.con = Conexion.conectar();
             String sql = "UPDATE categoriaproducto SET nombreCategoria=?, descripcionCategoria=? WHERE idCategoria=?";
             ps = this.con.prepareStatement(sql);
-            ps.setString(1, objC.getNombre());
+            ps.setString(1, objC.getNombrecat());
             ps.setString(2, objC.getDescripcion());
             ps.setInt(3, id); // ID al final para el WHERE
             ps.executeUpdate();
@@ -123,7 +123,7 @@ public void eliminar(int id) throws Exception {
             rs = ps.executeQuery();   
             if(rs.next()) {                
                 objC.setId(rs.getInt("idCategoria"));
-                objC.setNombre(rs.getString("nombreCategoria"));
+                objC.setNombrecat(rs.getString("nombreCategoria"));
                 objC.setDescripcion(rs.getString("descripcionCategoria"));
             }else{
                 objC = null;        

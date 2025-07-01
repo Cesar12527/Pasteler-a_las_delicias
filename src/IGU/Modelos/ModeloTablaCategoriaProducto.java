@@ -6,22 +6,22 @@ import java.util.ArrayList;
 import javax.swing.table.AbstractTableModel;
 
 public class ModeloTablaCategoriaProducto extends AbstractTableModel {
-  private ArrayList<CategoriaProducto> listadoClientes = null;
+  private ArrayList<CategoriaProducto> listadoCategoriaProducto = null;
 
     public ArrayList<CategoriaProducto> getListadoClientes() {
-        return listadoClientes;
+        return listadoCategoriaProducto;
     }
 
-    public void setListadoCategoriaProducto(ArrayList<CategoriaProducto> listadoClientes) {
-        this.listadoClientes = listadoClientes;
+    public void setListadoCategoriaProducto(ArrayList<CategoriaProducto> listadoCategoriaProducto) {
+        this.listadoCategoriaProducto = listadoCategoriaProducto;
         fireTableDataChanged();
     }
 
     @Override
     public int getRowCount() {
       int cantFilas = 0;
-      if(this.listadoClientes != null){
-           cantFilas = this.listadoClientes.size();
+      if(this.listadoCategoriaProducto != null){
+           cantFilas = this.listadoCategoriaProducto.size();
       }  
       return cantFilas;
     }
@@ -49,10 +49,10 @@ public class ModeloTablaCategoriaProducto extends AbstractTableModel {
       Object celda = "";
       CategoriaProducto objC = null;
       
-      if(this.listadoClientes != null){
-          objC =  this.listadoClientes.get(rowIndex);
+      if(this.listadoCategoriaProducto != null){
+          objC =  this.listadoCategoriaProducto.get(rowIndex);
         switch (columnIndex) {
-            case 0 : celda = objC.getNombre(); break;           
+            case 0 : celda = objC.getNombrecat(); break;           
             case 1 : celda = objC.getDescripcion(); break;
  
             
@@ -64,10 +64,10 @@ public class ModeloTablaCategoriaProducto extends AbstractTableModel {
     }
     
      public void addCategoriaProducto(CategoriaProducto cli) {
-    if (this.listadoClientes == null) {
-        this.listadoClientes = new ArrayList<>();
+    if (this.listadoCategoriaProducto == null) {
+        this.listadoCategoriaProducto = new ArrayList<>();
     }
-    this.listadoClientes.add(cli);
+    this.listadoCategoriaProducto.add(cli);
     fireTableDataChanged();  // Notifica a la tabla que el modelo cambió
 }
      
@@ -76,8 +76,8 @@ public class ModeloTablaCategoriaProducto extends AbstractTableModel {
       public CategoriaProducto getCategoriaProducto(int indiceSeleccionado) {
         CategoriaProducto objp = null;
         
-        if(this.listadoClientes != null) {
-            objp = this.listadoClientes.get(indiceSeleccionado);
+        if(this.listadoCategoriaProducto != null) {
+            objp = this.listadoCategoriaProducto.get(indiceSeleccionado);
         }
         
         return objp;

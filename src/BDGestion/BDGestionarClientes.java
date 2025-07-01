@@ -136,15 +136,19 @@ public void eliminar(int id) throws Exception {
 } 
 
     @Override
-    public Object obtener(int id) throws Exception {
+     public Object obtener(int id) throws Exception{
+        return null;
+    }
+     
+    public Object obtenerCliente(String nombre) throws Exception {
         Cliente objC = new Cliente();
         ResultSet rs = null;
         PreparedStatement ps = null;
         try {
             this.con = Conexion.conectar();
-            String sql = "SELECT * FROM cliente WHERE idCliente= ?";
+            String sql = "SELECT * FROM cliente WHERE nombreCliente= ?";
             ps = this.con.prepareStatement(sql);
-            ps.setInt(1, id);
+            ps.setString(1, nombre);
             rs = ps.executeQuery();   
             if(rs.next()) {                
                 objC.setId(rs.getInt("idCliente"));
@@ -161,5 +165,20 @@ public void eliminar(int id) throws Exception {
         return objC;
        
     }
-    
+    public Cliente obtenerPorNombre(String nombre) throws Exception {
+    Cliente c = null;
+    String sql = "SELECT * FROM cliente WHERE nombreCliente = ?";
+    try (Connection con = Conexion.conectar();
+         PreparedStatement ps = con.prepareStatement(sql)) {
+        ps.setString(1, nombre);
+        ResultSet rs = ps.executeQuery();
+        if (rs.next()) {
+            c = new Cliente();
+            c.setId(rs.getInt("idCliente")); // o rs.getInt("id_cliente")
+            c.setNombre(rs.getString("nombreCliente"));
+        }
+    }
+    return c;
+}
+
 }

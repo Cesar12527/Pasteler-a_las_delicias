@@ -10,15 +10,22 @@ import javax.swing.JOptionPane;
 
 
 public class JIF_GestionClientes extends javax.swing.JInternalFrame {
+      private static JIF_GestionClientes instancia;
     ModeloTablaCliente mtc = new ModeloTablaCliente();
     private int indexElemSelecc = -1;
 
-    public JIF_GestionClientes() {
+    private JIF_GestionClientes() {
         initComponents();
         this.cargarTabla();
         this.activarControles(false);
     }
-
+    public static JIF_GestionClientes getInstancia(){
+        
+        if( instancia == null || instancia.isClosed() ){
+            instancia = new JIF_GestionClientes();
+        } 
+        return instancia;
+    }
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -71,15 +78,15 @@ public class JIF_GestionClientes extends javax.swing.JInternalFrame {
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel1Layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(btnEliminar)
-                .addGap(33, 33, 33)
-                .addComponent(btnModificar)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 386, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addGap(6, 6, 6)
+                        .addComponent(btnModificar)
+                        .addGap(220, 220, 220)
+                        .addComponent(btnEliminar))
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 386, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(303, 303, 303))
         );
         jPanel1Layout.setVerticalGroup(
@@ -148,9 +155,7 @@ public class JIF_GestionClientes extends javax.swing.JInternalFrame {
                                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                                     .addComponent(jLabel4, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                     .addComponent(jLabel3, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 72, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(jLabel6, javax.swing.GroupLayout.PREFERRED_SIZE, 62, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                            .addComponent(jLabel6, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 62, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                             .addComponent(txtDNI)
@@ -256,7 +261,7 @@ public class JIF_GestionClientes extends javax.swing.JInternalFrame {
         Cliente objC = mtc.getCliente(indexElemSelecc);
         try {
             BDGestionarClientes bdCli = new BDGestionarClientes();
-            objC = (Cliente) bdCli.obtener(objC.getId() );
+            objC = (Cliente) bdCli.obtenerCliente(objC.getNombre());
             
             this.txtNombres.setText( objC.getNombre() );
             this.txtApellidos.setText(objC.getApellidos());
@@ -276,9 +281,9 @@ public class JIF_GestionClientes extends javax.swing.JInternalFrame {
         return;
     } else{
 
-    JOptionPane.showConfirmDialog(this, "¿Está seguro de eliminar este cliente?", "Confirmar", JOptionPane.YES_NO_OPTION);
-    }
-    try {
+   int respuesta = JOptionPane.showConfirmDialog(this, "¿Está seguro de eliminar este cliente?", "Confirmar", JOptionPane.YES_NO_OPTION);
+   if(respuesta == JOptionPane.YES_OPTION){
+     try {
         Cliente cli = mtc.getCliente(indexElemSelecc); // obtén el cliente del modelo de tabla
         BDGestionarClientes bd = new BDGestionarClientes();
         bd.eliminar(cli.getId());
@@ -287,10 +292,14 @@ public class JIF_GestionClientes extends javax.swing.JInternalFrame {
     } catch (Exception e) {
         JOptionPane.showMessageDialog(this, "Error al eliminar: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
     }
+   }
+    }
+  
     }//GEN-LAST:event_btnEliminarActionPerformed
 
     private void btnCancelarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCancelarActionPerformed
         this.activarControles(false);
+        this.limpiarFormulario();
     }//GEN-LAST:event_btnCancelarActionPerformed
 
     private void btnNuevoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnNuevoActionPerformed

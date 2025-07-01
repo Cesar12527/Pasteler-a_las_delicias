@@ -7,17 +7,23 @@ import java.util.ArrayList;
 import javax.swing.JOptionPane;
 
 public class JIF_GestionCategoriaProducto extends javax.swing.JInternalFrame {
-
-    ModeloTablaCategoriaProducto mtc = new ModeloTablaCategoriaProducto();
+    private static JIF_GestionCategoriaProducto instancia;
+    ModeloTablaCategoriaProducto mtcp = new ModeloTablaCategoriaProducto();
     private int indexElemSelecc = -1;
 
-    public JIF_GestionCategoriaProducto() {
+    private JIF_GestionCategoriaProducto() {
         initComponents();
         this.cargarTabla();
         this.limpiarFormulario();
         this.activarControles(false);
     }
-
+public static JIF_GestionCategoriaProducto getInstancia(){
+        
+       if( instancia == null || instancia.isClosed() ){
+            instancia = new JIF_GestionCategoriaProducto();
+       } 
+       return instancia;
+    }
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -44,7 +50,7 @@ public class JIF_GestionCategoriaProducto extends javax.swing.JInternalFrame {
 
         setClosable(true);
 
-        tblCategoriaProducto.setModel(this.mtc);
+        tblCategoriaProducto.setModel(this.mtcp);
         jScrollPane1.setViewportView(tblCategoriaProducto);
 
         btnModificar.setFont(new java.awt.Font("Segoe UI", 1, 16)); // NOI18N
@@ -198,20 +204,20 @@ public class JIF_GestionCategoriaProducto extends javax.swing.JInternalFrame {
     CategoriaProducto objP = new CategoriaProducto();
         try{
             
-            objP.setNombre(this.txtNombre.getText());
+            objP.setNombrecat(this.txtNombre.getText());
             objP.setDescripcion(this.txtDescripción.getText());
 
        
             
              BDGestionTipoProductos gestCli = new BDGestionTipoProductos();
             if (this.indexElemSelecc >= 0 ){ // Hay elem cargado en FORM : Editando!
-                CategoriaProducto cliEdit = (CategoriaProducto) this.mtc.getCategoriaProducto(this.indexElemSelecc);
+                CategoriaProducto cliEdit = (CategoriaProducto) this.mtcp.getCategoriaProducto(this.indexElemSelecc);
                 gestCli.actualizar( cliEdit.getId() , objP);
             
             } else {    // El elem es nuevo: Crear!
                 int id = gestCli.crear(objP);
                 objP.setId(id);
-                 this.mtc.addCategoriaProducto(objP);
+                 this.mtcp.addCategoriaProducto(objP);
                  
             }
             cargarTabla();
@@ -229,12 +235,12 @@ public class JIF_GestionCategoriaProducto extends javax.swing.JInternalFrame {
       this.indexElemSelecc = this.tblCategoriaProducto.getSelectedRow();
         if(this.indexElemSelecc < 0) return;
         
-        CategoriaProducto objC = mtc.getCategoriaProducto(indexElemSelecc);
+        CategoriaProducto objC = mtcp.getCategoriaProducto(indexElemSelecc);
         try {
             BDGestionTipoProductos bdCli = new BDGestionTipoProductos();
             objC = (CategoriaProducto) bdCli.obtener(objC.getId() );
             
-            this.txtNombre.setText( objC.getNombre() );
+            this.txtNombre.setText( objC.getNombrecat());
             this.txtDescripción.setText(objC.getDescripcion());
             
             this.activarControles(true);
@@ -249,26 +255,30 @@ public class JIF_GestionCategoriaProducto extends javax.swing.JInternalFrame {
 
     private void btnCancelarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCancelarActionPerformed
         this.activarControles(false);
+        this.limpiarFormulario();
     }//GEN-LAST:event_btnCancelarActionPerformed
 
     private void btnEliminarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEliminarActionPerformed
       this.indexElemSelecc = this.tblCategoriaProducto.getSelectedRow();
     if (indexElemSelecc == -1) {
-        JOptionPane.showMessageDialog(this, "Seleccione un cliente de la tabla.", "Advertencia", JOptionPane.WARNING_MESSAGE);
+        JOptionPane.showMessageDialog(this, "Seleccione una categoria de producto de la tabla.", "Advertencia", JOptionPane.WARNING_MESSAGE);
         return;
     } else{
 
-    JOptionPane.showConfirmDialog(this, "¿Está seguro de eliminar este cliente?", "Confirmar", JOptionPane.YES_NO_OPTION);
-    }
+    int respuesta = JOptionPane.showConfirmDialog(this, "¿Está seguro de eliminar esta categoria de producto?", "Confirmar", JOptionPane.YES_NO_OPTION);
+    if(respuesta == JOptionPane.YES_OPTION){
     try {
-        CategoriaProducto cli = mtc.getCategoriaProducto(indexElemSelecc); // obtén el cliente del modelo de tabla
+        CategoriaProducto cli = mtcp.getCategoriaProducto(indexElemSelecc); // obtén el cliente del modelo de tabla
         BDGestionTipoProductos bd = new BDGestionTipoProductos();
         bd.eliminar(cli.getId());
         cargarTabla();       // recarga la tabla con datos actualizados
 
     } catch (Exception e) {
         JOptionPane.showMessageDialog(this, "Error al eliminar: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
-    }        // TODO add your handling code here:
+    }       
+    }
+    }
+    
     }//GEN-LAST:event_btnEliminarActionPerformed
 
 
@@ -294,7 +304,7 @@ public void cargarTabla(){
         try {
             BDGestionTipoProductos bd_gestProd = new BDGestionTipoProductos();
             arrPro = bd_gestProd.listar();
-            this.mtc.setListadoCategoriaProducto(arrPro);
+            this.mtcp.setListadoCategoriaProducto(arrPro);
         } catch (Exception e) {
             JOptionPane.showMessageDialog(
                     this, 

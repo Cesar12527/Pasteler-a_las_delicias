@@ -47,6 +47,9 @@ public class Usuario {
         this.tiporol = tiporol;
     }
     
-    
+    @Override
+    public String toString() {
+        return usuario;
+    }
     
 }

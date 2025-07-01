@@ -5,7 +5,7 @@ import Entidades.TipoRol;
 import java.util.ArrayList;
 import javax.swing.AbstractListModel;
 import javax.swing.ComboBoxModel;
-import javax.swing.event.ListDataListener;
+
 
 public class ModeloComboTipoRol extends AbstractListModel implements ComboBoxModel {
     private ArrayList<TipoRol> listadoRol;

@@ -4,6 +4,7 @@
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
             <file>file:/C:/Users/obbtu/OneDrive/Documentos/NetBeansProjects/pasteleriaLasDelicias_E.I.R.L/src/IGU/Vendedor.java</file>
+            <file>file:/C:/Users/obbtu/OneDrive/Documentos/NetBeansProjects/pasteleriaLasDelicias_E.I.R.L/src/IGU/JIF_ProcesosNuevaVenta.java</file>
             <file>file:/C:/Users/obbtu/OneDrive/Documentos/NetBeansProjects/pasteleriaLasDelicias_E.I.R.L/src/IGU/JIF_GestionProductos.java</file>
             <file>file:/C:/Users/obbtu/OneDrive/Documentos/NetBeansProjects/pasteleriaLasDelicias_E.I.R.L/src/IGU/JIF_GestionActivosFijos.java</file>
             <file>file:/C:/Users/obbtu/OneDrive/Documentos/NetBeansProjects/pasteleriaLasDelicias_E.I.R.L/src/IGU/JIF_CrearUsuario.java</file>
@@ -18,11 +19,7 @@
             <file>file:/C:/Users/obbtu/OneDrive/Documentos/NetBeansProjects/pasteleriaLasDelicias_E.I.R.L/src/Entidades/TipoRol.java</file>
             <file>file:/C:/Users/obbtu/OneDrive/Documentos/NetBeansProjects/pasteleriaLasDelicias_E.I.R.L/src/BDGestion/BDGestionarProductos.java</file>
             <file>file:/C:/Users/obbtu/OneDrive/Documentos/NetBeansProjects/pasteleriaLasDelicias_E.I.R.L/src/BDGestion/BDGestionarClientes.java</file>
-            <file>file:/C:/Users/obbtu/OneDrive/Documentos/NetBeansProjects/pasteleriaLasDelicias_E.I.R.L/src/IGU/JIF_GestionCaja.java</file>
             <file>file:/C:/Users/obbtu/OneDrive/Documentos/NetBeansProjects/pasteleriaLasDelicias_E.I.R.L/src/IGU/MDI_MenuPrincipal.java</file>
-            <file>file:/C:/Users/obbtu/OneDrive/Documentos/NetBeansProjects/pasteleriaLasDelicias_E.I.R.L/src/IGU/JIF_ProcesosNuevaVenta.java</file>
-            <file>file:/C:/Users/obbtu/OneDrive/Documentos/NetBeansProjects/pasteleriaLasDelicias_E.I.R.L/src/IGU/JIF_ProcesosCompra.java</file>
-            <file>file:/C:/Users/obbtu/OneDrive/Documentos/NetBeansProjects/pasteleriaLasDelicias_E.I.R.L/src/IGU/JIF_GestionProveedores.java</file>
             <file>file:/C:/Users/obbtu/OneDrive/Documentos/NetBeansProjects/pasteleriaLasDelicias_E.I.R.L/src/IGU/JIF_GestionMetodoPagos.java</file>
             <file>file:/C:/Users/obbtu/OneDrive/Documentos/NetBeansProjects/pasteleriaLasDelicias_E.I.R.L/src/IGU/JIF_GestionEmpleados.java</file>
             <file>file:/C:/Users/obbtu/OneDrive/Documentos/NetBeansProjects/pasteleriaLasDelicias_E.I.R.L/src/IGU/JIF_GestionClientes.java</file>
@@ -38,6 +35,21 @@
             <file>file:/C:/Users/obbtu/OneDrive/Documentos/NetBeansProjects/pasteleriaLasDelicias_E.I.R.L/src/Entidades/ActivoFijo.java</file>
             <file>file:/C:/Users/obbtu/OneDrive/Documentos/NetBeansProjects/pasteleriaLasDelicias_E.I.R.L/src/BDGestion/BDGestionActivoFijo.java</file>
             <file>file:/C:/Users/obbtu/OneDrive/Documentos/NetBeansProjects/pasteleriaLasDelicias_E.I.R.L/src/IGU/Modelos/ModeloTablaActivoFijo.java</file>
+            <file>file:/C:/Users/obbtu/OneDrive/Documentos/NetBeansProjects/pasteleriaLasDelicias_E.I.R.L/src/IGU/Modelos/ModeloComboUsuario.java</file>
+            <file>file:/C:/Users/obbtu/OneDrive/Documentos/NetBeansProjects/pasteleriaLasDelicias_E.I.R.L/src/IGU/Modelos/ModeloComboCategoriaProducto.java</file>
+            <file>file:/C:/Users/obbtu/OneDrive/Documentos/NetBeansProjects/pasteleriaLasDelicias_E.I.R.L/src/BDGestion/BDGestionEmpleados.java</file>
+            <file>file:/C:/Users/obbtu/OneDrive/Documentos/NetBeansProjects/pasteleriaLasDelicias_E.I.R.L/src/Entidades/Empleado.java</file>
+            <file>file:/C:/Users/obbtu/OneDrive/Documentos/NetBeansProjects/pasteleriaLasDelicias_E.I.R.L/src/IGU/Modelos/ModeloTablaEmpleado.java</file>
+            <file>file:/C:/Users/obbtu/OneDrive/Documentos/NetBeansProjects/pasteleriaLasDelicias_E.I.R.L/src/Entidades/Venta.java</file>
+            <file>file:/C:/Users/obbtu/OneDrive/Documentos/NetBeansProjects/pasteleriaLasDelicias_E.I.R.L/src/Entidades/DetalleVenta.java</file>
+            <file>file:/C:/Users/obbtu/OneDrive/Documentos/NetBeansProjects/pasteleriaLasDelicias_E.I.R.L/src/Entidades/MetodoPago.java</file>
+            <file>file:/C:/Users/obbtu/OneDrive/Documentos/NetBeansProjects/pasteleriaLasDelicias_E.I.R.L/src/BDGestion/BDGestionarDetalleVenta.java</file>
+            <file>file:/C:/Users/obbtu/OneDrive/Documentos/NetBeansProjects/pasteleriaLasDelicias_E.I.R.L/src/BDGestion/BDGestionarVenta.java</file>
+            <file>file:/C:/Users/obbtu/OneDrive/Documentos/NetBeansProjects/pasteleriaLasDelicias_E.I.R.L/src/IGU/Modelos/ModeloComboTipoPago.java</file>
+            <file>file:/C:/Users/obbtu/OneDrive/Documentos/NetBeansProjects/pasteleriaLasDelicias_E.I.R.L/src/BDGestion/BDGestionMetodoPago.java</file>
+            <file>file:/C:/Users/obbtu/OneDrive/Documentos/NetBeansProjects/pasteleriaLasDelicias_E.I.R.L/src/IGU/Modelos/ModeloComboEmpleado.java</file>
+            <file>file:/C:/Users/obbtu/OneDrive/Documentos/NetBeansProjects/pasteleriaLasDelicias_E.I.R.L/src/IGU/Modelos/ModeloComboCliente.java</file>
+            <file>file:/C:/Users/obbtu/OneDrive/Documentos/NetBeansProjects/pasteleriaLasDelicias_E.I.R.L/src/IGU/Modelos/ModeloTablaMetodoPago.java</file>
         </group>
     </open-files>
 </project-private>

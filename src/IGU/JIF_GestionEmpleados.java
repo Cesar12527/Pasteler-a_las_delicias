@@ -48,6 +48,10 @@ public static JIF_GestionEmpleados getInstancia(){
         btnNuevo = new javax.swing.JButton();
         btnCancelar = new javax.swing.JButton();
         txtEstado = new javax.swing.JTextField();
+        jLabel1 = new javax.swing.JLabel();
+        txtDNI = new javax.swing.JTextField();
+        txtTelefono = new javax.swing.JTextField();
+        jLabel11 = new javax.swing.JLabel();
         btnEliminar = new javax.swing.JButton();
         btnModificar = new javax.swing.JButton();
 
@@ -124,34 +128,50 @@ public static JIF_GestionEmpleados getInstancia(){
             }
         });
 
+        jLabel1.setText("DNI:");
+
+        jLabel11.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        jLabel11.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
+        jLabel11.setText("Telefono");
+
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
         jPanel2Layout.setHorizontalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel2Layout.createSequentialGroup()
-                .addGap(52, 52, 52)
-                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel2Layout.createSequentialGroup()
-                        .addComponent(jLabel6)
-                        .addGap(18, 18, 18)
-                        .addComponent(txtNombre, javax.swing.GroupLayout.PREFERRED_SIZE, 184, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(44, 44, 44)
+                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addGroup(jPanel2Layout.createSequentialGroup()
+                                .addComponent(jLabel6)
+                                .addGap(18, 18, 18)
+                                .addComponent(txtNombre, javax.swing.GroupLayout.PREFERRED_SIZE, 184, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addGroup(jPanel2Layout.createSequentialGroup()
+                                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                                    .addComponent(jLabel7)
+                                    .addComponent(jLabel8)
+                                    .addComponent(jLabel1)
+                                    .addComponent(jLabel11))
+                                .addGap(18, 18, 18)
+                                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(btnNuevo)
+                                    .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                        .addComponent(txtApellido, javax.swing.GroupLayout.DEFAULT_SIZE, 184, Short.MAX_VALUE)
+                                        .addComponent(txtCorreo)
+                                        .addComponent(txtDNI)
+                                        .addComponent(txtTelefono)
+                                        .addComponent(btnGuardar))
+                                    .addComponent(btnCancelar)))))
                     .addGroup(jPanel2Layout.createSequentialGroup()
-                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jLabel7, javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                .addComponent(jLabel8, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addComponent(jLabel9, javax.swing.GroupLayout.Alignment.TRAILING))
-                            .addComponent(jLabel10, javax.swing.GroupLayout.Alignment.TRAILING))
+                        .addGap(59, 59, 59)
+                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(jLabel9)
+                            .addComponent(jLabel10))
                         .addGap(18, 18, 18)
                         .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(btnGuardar)
-                            .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                .addComponent(txtApellido)
-                                .addComponent(txtCorreo)
-                                .addComponent(txtEstado, javax.swing.GroupLayout.PREFERRED_SIZE, 184, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addComponent(cmbRol, javax.swing.GroupLayout.PREFERRED_SIZE, 133, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addComponent(btnNuevo)
-                            .addComponent(btnCancelar))))
+                            .addComponent(cmbRol, javax.swing.GroupLayout.PREFERRED_SIZE, 133, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(txtEstado, javax.swing.GroupLayout.PREFERRED_SIZE, 184, javax.swing.GroupLayout.PREFERRED_SIZE))))
                 .addContainerGap(98, Short.MAX_VALUE))
         );
         jPanel2Layout.setVerticalGroup(
@@ -170,20 +190,28 @@ public static JIF_GestionEmpleados getInstancia(){
                     .addComponent(jLabel8, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(txtCorreo, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(18, 18, 18)
-                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(jLabel9, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(txtEstado, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(txtDNI, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel1))
                 .addGap(18, 18, 18)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel10, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(cmbRol, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(46, 46, 46)
-                .addComponent(btnGuardar, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(txtTelefono, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel11, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(18, 18, 18)
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(txtEstado, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel9, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(18, 18, 18)
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(cmbRol, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel10, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(18, 18, 18)
+                .addComponent(btnGuardar, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 11, Short.MAX_VALUE)
                 .addComponent(btnNuevo, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
                 .addComponent(btnCancelar, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(37, Short.MAX_VALUE))
+                .addContainerGap())
         );
 
         btnEliminar.setFont(new java.awt.Font("Segoe UI", 1, 16)); // NOI18N
@@ -213,7 +241,7 @@ public static JIF_GestionEmpleados getInstancia(){
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                        .addContainerGap(14, Short.MAX_VALUE))
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(btnModificar)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
@@ -231,7 +259,7 @@ public static JIF_GestionEmpleados getInstancia(){
                             .addComponent(btnModificar, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(btnEliminar, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)))
                     .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(0, 17, Short.MAX_VALUE))
+                .addGap(0, 1, Short.MAX_VALUE))
         );
 
         pack();
@@ -244,10 +272,12 @@ public static JIF_GestionEmpleados getInstancia(){
     private void btnGuardarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnGuardarActionPerformed
      Empleado objP = new Empleado();
         try{
-            this.validarProducto();
+            this.validarEmpleado();
             
             objP.setNombreEmpleado(this.txtNombre.getText());
             objP.setApellidos(this.txtApellido.getText());
+            objP.setDni(this.txtDNI.getText());
+            objP.setTelefono(this.txtTelefono.getText());
             objP.setCorreo(this.txtCorreo.getText());
             objP.setEstado(this.txtEstado.getText());
             Usuario cp = this.mcu.getSeleccionado();
@@ -267,6 +297,8 @@ public static JIF_GestionEmpleados getInstancia(){
             cargarTablaEmpleado();
             this.limpiarFormulario();
             this.activarControles(false);
+            tblEmpleado.clearSelection();  // ← quita la selección en la tabla
+            this.indexElemSelecc = -1;              // ← desactiva la edición o eliminación
             
         } catch (Exception e) {
             JOptionPane.showMessageDialog(this, e.getMessage());
@@ -277,16 +309,23 @@ public static JIF_GestionEmpleados getInstancia(){
 
     private void btnNuevoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnNuevoActionPerformed
          this.activarControles(true);
+         tblEmpleado.clearSelection();  // ← quita la selección en la tabla
+         this.indexElemSelecc = -1;              // ← desactiva la edición o eliminación
     }//GEN-LAST:event_btnNuevoActionPerformed
 
     private void btnCancelarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCancelarActionPerformed
         this.activarControles(false);
         this.limpiarFormulario();
+        tblEmpleado.clearSelection();  // ← quita la selección en la tabla
+        this.indexElemSelecc = -1;              // ← desactiva la edición o eliminación
     }//GEN-LAST:event_btnCancelarActionPerformed
 
     private void btnModificarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnModificarActionPerformed
-         this.indexElemSelecc = this.tblEmpleado.getSelectedRow();
-        if(this.indexElemSelecc < 0) return;
+          this.indexElemSelecc = this.tblEmpleado.getSelectedRow();
+    if (indexElemSelecc == -1) {
+        JOptionPane.showMessageDialog(this, "Seleccione un empleado de la tabla.", "Advertencia", JOptionPane.WARNING_MESSAGE);
+        return;
+    } else{
         
         Empleado objC = mte.getEmpleado(indexElemSelecc);
         try {
@@ -296,13 +335,17 @@ public static JIF_GestionEmpleados getInstancia(){
             this.txtNombre.setText( objC.getNombreEmpleado());
             this.txtApellido.setText( objC.getApellidos());
             this.txtCorreo.setText( objC.getCorreo());
+            this.txtDNI.setText(objC.getDni());
+            this.txtTelefono.setText(objC.getTelefono());
             this.txtEstado.setText( objC.getEstado());
             this.mcu.setSeleccionado(objC.getUsuario());
             this.cmbRol.setSelectedItem(objC.getUsuario());
             this.activarControles(true);
+            tblEmpleado.clearSelection();  // ← quita la selección en la tabla
         } catch (Exception e) {
+            JOptionPane.showMessageDialog(this, "Error al cargar datos para modificar: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
         }
-        this.activarControles(true);
+        }
     }//GEN-LAST:event_btnModificarActionPerformed
 
     private void btnEliminarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEliminarActionPerformed
@@ -318,7 +361,8 @@ public static JIF_GestionEmpleados getInstancia(){
         BDGestionEmpleados bd = new BDGestionEmpleados();
         bd.eliminar(cli.getIdEmpleado());
         cargarTablaEmpleado();       // recarga la tabla con datos actualizados
-
+        tblEmpleado.clearSelection();  // ← quita la selección en la tabla
+        this.indexElemSelecc = -1;              // ← desactiva la edición o eliminación
     } catch (Exception e) {
         JOptionPane.showMessageDialog(this, "Error al eliminar: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
     }
@@ -335,7 +379,9 @@ public static JIF_GestionEmpleados getInstancia(){
     private javax.swing.JButton btnNuevo;
     private javax.swing.ButtonGroup buttonGroup1;
     private javax.swing.JComboBox<String> cmbRol;
+    private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;
+    private javax.swing.JLabel jLabel11;
     private javax.swing.JLabel jLabel6;
     private javax.swing.JLabel jLabel7;
     private javax.swing.JLabel jLabel8;
@@ -346,8 +392,10 @@ public static JIF_GestionEmpleados getInstancia(){
     private javax.swing.JTable tblEmpleado;
     private javax.swing.JTextField txtApellido;
     private javax.swing.JTextField txtCorreo;
+    private javax.swing.JTextField txtDNI;
     private javax.swing.JTextField txtEstado;
     private javax.swing.JTextField txtNombre;
+    private javax.swing.JTextField txtTelefono;
     // End of variables declaration//GEN-END:variables
  private void cargarComboCategoriaProducto() {
     
@@ -378,28 +426,48 @@ public static JIF_GestionEmpleados getInstancia(){
                     JOptionPane.ERROR_MESSAGE);
         }
     }
-    private void validarProducto() {
-                   try {
-            if (txtNombre.getText().trim().isEmpty()) {
-                throw new IllegalArgumentException("El campo Nombre no puede estar vacio.");
-            }
-            if (txtApellido.getText().trim().isEmpty()) {
-                throw new IllegalArgumentException("El campo Precio no puede estar vacio.");
-            }
-            if (txtEstado.getText().trim().isEmpty()) {
-                throw new IllegalArgumentException("El Stock no puede estar vacio.");
-            } 
-            if (txtCorreo.getText().trim().isEmpty()) {
-                throw new IllegalArgumentException("El Stock no puede estar vacio.");
-            } 
-        
-        } catch (Exception e) {
-            throw e;
-        } 
+    private void validarEmpleado() {
+            try {
+        if (txtNombre.getText().trim().isEmpty()) {
+            throw new IllegalArgumentException("El campo Nombre no puede estar vacío.");
+        }
+        if (txtApellido.getText().trim().isEmpty()) {
+            throw new IllegalArgumentException("El campo Apellido no puede estar vacío.");
+        }
+        if (txtCorreo.getText().trim().isEmpty()) {
+            throw new IllegalArgumentException("El campo Correo no puede estar vacío.");
+        }
+        if (!txtCorreo.getText().trim().matches("^[a-zA-Z0-9._%+-]+@gmail\\.com$")) {
+            throw new IllegalArgumentException("El correo debe tener el formato usuario@gmail.com y solo se acepta gmail.");
+        }
+        if (txtDNI.getText().trim().isEmpty()) {
+            throw new IllegalArgumentException("El campo DNI no puede estar vacío.");
+        }
+        if (!txtDNI.getText().trim().matches("\\d{8}")) {
+            throw new IllegalArgumentException("El DNI debe contener exactamente 8 dígitos numéricos.");
+        }
+        if (txtTelefono.getText().trim().isEmpty()) {
+            throw new IllegalArgumentException("El campo Teléfono no puede estar vacío.");
+        }
+        if (!txtTelefono.getText().trim().matches("9\\d{8}")) {
+            throw new IllegalArgumentException("El teléfono debe tener 9 dígitos y empezar con '9'.");
+        }
+       if (txtEstado.getText().trim().isEmpty()) {
+           throw new IllegalArgumentException("El campo Estado no puede estar vacío.");
+        }
+        if (this.mcu.getSeleccionado() == null) {
+            throw new IllegalArgumentException("Debe seleccionar un Rol para el empleado.");
+        }
+
+    } catch (Exception e) {
+        throw e;
+    }
     }
     private void limpiarFormulario() {
         this.txtNombre.setText("");
         this.txtApellido.setText("");
+        this.txtDNI.setText("");
+        this.txtTelefono.setText("");
         this.txtEstado.setText("");
         this.txtCorreo.setText("");
         this.cmbRol.setSelectedIndex(-1);
@@ -408,6 +476,8 @@ public static JIF_GestionEmpleados getInstancia(){
     private void activarControles(boolean estado) {
         this.txtNombre.setEnabled(estado);
         this.txtApellido.setEnabled(estado);
+        this.txtDNI.setEnabled(estado);
+        this.txtTelefono.setEnabled(estado);
         this.txtEstado.setEnabled(estado);
         this.txtCorreo.setEnabled(estado);
         this.btnGuardar.setEnabled(estado);

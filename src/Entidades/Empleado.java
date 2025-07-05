@@ -4,6 +4,8 @@ public class Empleado {
     private int idEmpleado;
     private String nombreEmpleado;
     private String apellidos;
+    private String dni;
+    private String telefono;
     private String correo;
     private String estado;
     private Usuario usuario; // Relación con Usuario
@@ -12,15 +14,17 @@ public class Empleado {
     public Empleado() {
     }
 
-    public Empleado(String nombreEmpleado, String apellidos, String correo, String estado, Usuario usuario) {
+    public Empleado(int idEmpleado, String nombreEmpleado, String apellidos, String dni, String telefono, String correo, String estado, Usuario usuario) {
+        this.idEmpleado = idEmpleado;
         this.nombreEmpleado = nombreEmpleado;
         this.apellidos = apellidos;
+        this.dni = dni;
+        this.telefono = telefono;
         this.correo = correo;
         this.estado = estado;
         this.usuario = usuario;
     }
 
-    // Getters y Setters
     public int getIdEmpleado() {
         return idEmpleado;
     }
@@ -43,6 +47,22 @@ public class Empleado {
 
     public void setApellidos(String apellidos) {
         this.apellidos = apellidos;
+    }
+
+    public String getDni() {
+        return dni;
+    }
+
+    public void setDni(String dni) {
+        this.dni = dni;
+    }
+
+    public String getTelefono() {
+        return telefono;
+    }
+
+    public void setTelefono(String telefono) {
+        this.telefono = telefono;
     }
 
     public String getCorreo() {
@@ -69,6 +89,7 @@ public class Empleado {
         this.usuario = usuario;
     }
 
+   
     @Override
     public String toString() {
         return nombreEmpleado;

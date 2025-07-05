@@ -1,4 +1,4 @@
-
+/*
 package IGU.Modelos;
 
 import Entidades.Cliente;
@@ -67,5 +67,7 @@ public class ModeloComboCliente extends AbstractListModel implements ComboBoxMod
         }
         return elem;
     }
+    
+   
 
-}
+}*/

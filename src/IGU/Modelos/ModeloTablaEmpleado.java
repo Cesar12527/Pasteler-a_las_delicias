@@ -28,7 +28,7 @@ public class ModeloTablaEmpleado extends AbstractTableModel{
     
     @Override
     public int getColumnCount() {
-        return 4;    
+        return 7;    
     }
         public String getColumnName (int column){
         String nombreCol = "";
@@ -36,8 +36,11 @@ public class ModeloTablaEmpleado extends AbstractTableModel{
         switch (column) {
             case 0 : nombreCol = "Nombre"; break;           
             case 1 : nombreCol = "Apellido"; break;
-            case 2 : nombreCol = "Correo"; break;
-            case 3 : nombreCol = "Estado"; break;
+            case 2 : nombreCol = "DNI"; break;
+            case 3 : nombreCol = "Telefono"; break;
+            case 4 : nombreCol = "Correo"; break;
+            case 5 : nombreCol = "Estado"; break;
+            case 6 : nombreCol = "Rol"; break;
             
             default:
                 throw new AssertionError();
@@ -55,8 +58,11 @@ public class ModeloTablaEmpleado extends AbstractTableModel{
         switch (columnIndex) {
             case 0 : celda = objP.getNombreEmpleado(); break;
             case 1 : celda = objP.getApellidos(); break;
-            case 2 : celda = objP.getCorreo(); break;
-            case 3 : celda = objP.getEstado(); break;
+            case 2 : celda = objP.getDni(); break;
+            case 3 : celda = objP.getTelefono(); break;
+            case 4 : celda = objP.getCorreo(); break;
+            case 5 : celda = objP.getEstado(); break;
+            case 6 : celda = objP.getUsuario().getTiporol(); break;
 
             
             default:

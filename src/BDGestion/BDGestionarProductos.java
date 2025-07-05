@@ -20,6 +20,7 @@ private Connection con = null;
                           cp.nombreCategoria , cp.descripcionCategoria
                 FROM producto AS p
                 INNER JOIN categoriaproducto AS cp ON p.id_tipo_categoria = cp.idCategoria
+                     ORDER BY cp.idCategoria;
                      """;
         try (        
             Connection con = Conexion.conectar();

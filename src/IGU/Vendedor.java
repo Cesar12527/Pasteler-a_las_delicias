@@ -14,10 +14,12 @@ import Entidades.Empleado;
 import Entidades.MetodoPago;
 import IGU.Modelos.ModeloComboTipoPago;
 import IGU.Modelos.ModeloComboEmpleado;
-import IGU.Modelos.ModeloComboCliente;
 import java.awt.event.KeyEvent;
 import java.util.ArrayList;
+import javax.swing.DefaultListModel;
+import javax.swing.JList;
 import javax.swing.JOptionPane;
+import javax.swing.JPopupMenu;
 import javax.swing.table.DefaultTableModel;
 
 /**
@@ -29,16 +31,118 @@ public class Vendedor extends javax.swing.JFrame {
     int item;
     DefaultTableModel model = new DefaultTableModel();
     double TotalPagar = 0.00;
+    private boolean Campo= false;
+    private JPopupMenu popupSugerencias = new JPopupMenu();
+    private JList<String> listaSugerencias = new JList<>();
+    private DefaultListModel<String> modeloSugerencias = new DefaultListModel<>();
     
    ModeloComboTipoPago mctp = new ModeloComboTipoPago();
    ModeloComboEmpleado mce = new ModeloComboEmpleado();
-   ModeloComboCliente mcc = new ModeloComboCliente();
+
     public Vendedor() {
         initComponents();
         setLocationRelativeTo(null);
         this.cargarComboMetodoPago();
         this.cargarComboEmpleado();
-        this.cargarComboCliente();
+        listaSugerencias.setModel(modeloSugerencias);
+listaSugerencias.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
+
+
+popupSugerencias.add(new javax.swing.JScrollPane(listaSugerencias));
+
+txtProducto.getDocument().addDocumentListener(new javax.swing.event.DocumentListener() {
+    public void insertUpdate(javax.swing.event.DocumentEvent e) {
+        mostrarSugerenciasProducto();
+    }
+
+    public void removeUpdate(javax.swing.event.DocumentEvent e) {
+        mostrarSugerenciasProducto();
+    }
+
+    public void changedUpdate(javax.swing.event.DocumentEvent e) {
+        mostrarSugerenciasProducto();
+    }
+});
+
+txtCliente.getDocument().addDocumentListener(new javax.swing.event.DocumentListener() {
+    public void insertUpdate(javax.swing.event.DocumentEvent e) {
+        mostrarSugerenciasCliente(); // ✅ solo clientes
+    }
+    public void removeUpdate(javax.swing.event.DocumentEvent e) {
+        mostrarSugerenciasCliente();
+    }
+    public void changedUpdate(javax.swing.event.DocumentEvent e) {
+        mostrarSugerenciasCliente();
+    }
+});
+txtProducto.addKeyListener(new java.awt.event.KeyAdapter() {
+    @Override
+    public void keyPressed(KeyEvent evt) {
+        int key = evt.getKeyCode();
+
+        if (popupSugerencias.isVisible()) {
+            int index = listaSugerencias.getSelectedIndex();
+
+            // Flecha abajo
+            if (key == KeyEvent.VK_DOWN) {
+                if (index < modeloSugerencias.size() - 1) {
+                    listaSugerencias.setSelectedIndex(index + 1);
+                    listaSugerencias.ensureIndexIsVisible(index + 1);
+                }
+                evt.consume(); // Evita que se pase al JTextField
+            }
+
+            // Flecha arriba
+            else if (key == KeyEvent.VK_UP) {
+                if (index > 0) {
+                    listaSugerencias.setSelectedIndex(index - 1);
+                    listaSugerencias.ensureIndexIsVisible(index - 1);
+                }
+                evt.consume();
+            }
+
+            // Escape para cerrar el popup
+            else if (key == KeyEvent.VK_ESCAPE) {
+                popupSugerencias.setVisible(false);
+            }
+        }
+    }
+});
+txtCliente.addKeyListener(new java.awt.event.KeyAdapter() {
+    @Override
+    public void keyPressed(KeyEvent evt) {
+        int key = evt.getKeyCode();
+
+        if (popupSugerencias.isVisible()) {
+            int index = listaSugerencias.getSelectedIndex();
+
+            // Flecha abajo
+            if (key == KeyEvent.VK_DOWN) {
+                if (index < modeloSugerencias.size() - 1) {
+                    listaSugerencias.setSelectedIndex(index + 1);
+                    listaSugerencias.ensureIndexIsVisible(index + 1);
+                }
+                evt.consume(); // Evita que se pase al JTextField
+            }
+
+            // Flecha arriba
+            else if (key == KeyEvent.VK_UP) {
+                if (index > 0) {
+                    listaSugerencias.setSelectedIndex(index - 1);
+                    listaSugerencias.ensureIndexIsVisible(index - 1);
+                }
+                evt.consume();
+            }
+
+            // Escape para cerrar el popup
+            else if (key == KeyEvent.VK_ESCAPE) {
+                popupSugerencias.setVisible(false);
+            }
+        }}
+
+    
+});
+
     }
 
     /**
@@ -52,9 +156,9 @@ public class Vendedor extends javax.swing.JFrame {
 
         jComboBox2 = new javax.swing.JComboBox<>();
         jLabel12 = new javax.swing.JLabel();
-        jButton4 = new javax.swing.JButton();
-        jButton5 = new javax.swing.JButton();
-        jTabbedPane1 = new javax.swing.JTabbedPane();
+        btnListaVentas = new javax.swing.JButton();
+        btnSalir = new javax.swing.JButton();
+        tableVentaListaVenta = new javax.swing.JTabbedPane();
         jPanel2 = new javax.swing.JPanel();
         jPanel6 = new javax.swing.JPanel();
         txtCantidad = new javax.swing.JTextField();
@@ -76,7 +180,7 @@ public class Vendedor extends javax.swing.JFrame {
         txtStock = new javax.swing.JTextField();
         jLabel8 = new javax.swing.JLabel();
         cmbEmpleado = new javax.swing.JComboBox<>();
-        cmbCliente = new javax.swing.JComboBox<>();
+        txtCliente = new javax.swing.JTextField();
         jPanel3 = new javax.swing.JPanel();
         jScrollPane2 = new javax.swing.JScrollPane();
         jTable2 = new javax.swing.JTable();
@@ -90,9 +194,9 @@ public class Vendedor extends javax.swing.JFrame {
         jTable3 = new javax.swing.JTable();
         jButton8 = new javax.swing.JButton();
         jLabel1 = new javax.swing.JLabel();
-        jButton1 = new javax.swing.JButton();
-        jButton2 = new javax.swing.JButton();
-        jButton3 = new javax.swing.JButton();
+        btnNuevaVenta = new javax.swing.JButton();
+        btnListaProductos = new javax.swing.JButton();
+        btnCliente = new javax.swing.JButton();
 
         jComboBox2.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
 
@@ -102,9 +206,19 @@ public class Vendedor extends javax.swing.JFrame {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
-        jButton4.setText("Lista de ventas");
+        btnListaVentas.setText("Lista de ventas");
+        btnListaVentas.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnListaVentasActionPerformed(evt);
+            }
+        });
 
-        jButton5.setText("Salir");
+        btnSalir.setText("Salir");
+        btnSalir.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnSalirActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel6Layout = new javax.swing.GroupLayout(jPanel6);
         jPanel6.setLayout(jPanel6Layout);
@@ -191,6 +305,9 @@ public class Vendedor extends javax.swing.JFrame {
             public void keyPressed(java.awt.event.KeyEvent evt) {
                 txtProductoKeyPressed(evt);
             }
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                txtProductoKeyReleased(evt);
+            }
         });
 
         jLabel8.setText("Stock:");
@@ -198,7 +315,11 @@ public class Vendedor extends javax.swing.JFrame {
         cmbEmpleado.setModel(this.mce
         );
 
-        cmbCliente.setModel(this.mcc);
+        txtCliente.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                txtClienteKeyPressed(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
@@ -211,8 +332,8 @@ public class Vendedor extends javax.swing.JFrame {
                         .addGap(40, 40, 40)
                         .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 68, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(cmbCliente, javax.swing.GroupLayout.PREFERRED_SIZE, 137, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(67, 67, 67)
+                        .addComponent(txtCliente, javax.swing.GroupLayout.PREFERRED_SIZE, 128, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(76, 76, 76)
                         .addComponent(jLabel5, javax.swing.GroupLayout.PREFERRED_SIZE, 68, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(18, 18, 18)
                         .addComponent(cmbEmpleado, javax.swing.GroupLayout.PREFERRED_SIZE, 146, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -264,8 +385,8 @@ public class Vendedor extends javax.swing.JFrame {
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 28, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel5, javax.swing.GroupLayout.PREFERRED_SIZE, 28, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(cmbCliente, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(cmbEmpleado, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(cmbEmpleado, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(txtCliente, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(18, 18, 18)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel6, javax.swing.GroupLayout.PREFERRED_SIZE, 28, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -294,7 +415,7 @@ public class Vendedor extends javax.swing.JFrame {
                     .addContainerGap(321, Short.MAX_VALUE)))
         );
 
-        jTabbedPane1.addTab("Venta", jPanel2);
+        tableVentaListaVenta.addTab("Venta", jPanel2);
 
         jTable2.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
@@ -318,24 +439,24 @@ public class Vendedor extends javax.swing.JFrame {
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel3Layout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(jButton7)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 343, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 199, Short.MAX_VALUE)
                 .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 471, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(21, 21, 21))
+                .addGap(165, 165, 165))
         );
         jPanel3Layout.setVerticalGroup(
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel3Layout.createSequentialGroup()
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel3Layout.createSequentialGroup()
-                        .addGap(20, 20, 20)
-                        .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 254, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(jPanel3Layout.createSequentialGroup()
                         .addGap(41, 41, 41)
-                        .addComponent(jButton7)))
-                .addContainerGap(75, Short.MAX_VALUE))
+                        .addComponent(jButton7))
+                    .addGroup(jPanel3Layout.createSequentialGroup()
+                        .addGap(22, 22, 22)
+                        .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 254, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addContainerGap(73, Short.MAX_VALUE))
         );
 
-        jTabbedPane1.addTab("Lista de productos", jPanel3);
+        tableVentaListaVenta.addTab("Lista de productos", jPanel3);
 
         jTable4.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
@@ -373,7 +494,7 @@ public class Vendedor extends javax.swing.JFrame {
                 .addContainerGap(150, Short.MAX_VALUE))
         );
 
-        jTabbedPane1.addTab("Lista de clientes", jPanel5);
+        tableVentaListaVenta.addTab("Lista de clientes", jPanel5);
 
         jTable3.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
@@ -414,16 +535,31 @@ public class Vendedor extends javax.swing.JFrame {
                 .addContainerGap(121, Short.MAX_VALUE))
         );
 
-        jTabbedPane1.addTab("Lista de ventas", jPanel4);
+        tableVentaListaVenta.addTab("Lista de ventas", jPanel4);
 
         jLabel1.setFont(new java.awt.Font("Dialog", 2, 36)); // NOI18N
         jLabel1.setText("VENTAS");
 
-        jButton1.setText("Nueva Venta");
+        btnNuevaVenta.setText("Nueva Venta");
+        btnNuevaVenta.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnNuevaVentaActionPerformed(evt);
+            }
+        });
 
-        jButton2.setText("Lista de productos");
+        btnListaProductos.setText("Lista de productos");
+        btnListaProductos.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnListaProductosActionPerformed(evt);
+            }
+        });
 
-        jButton3.setText("Clientes");
+        btnCliente.setText("Clientes");
+        btnCliente.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnClienteActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -437,34 +573,34 @@ public class Vendedor extends javax.swing.JFrame {
                     .addGroup(layout.createSequentialGroup()
                         .addGap(24, 24, 24)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jButton2)
-                            .addComponent(jButton1)
-                            .addComponent(jButton3)
-                            .addComponent(jButton4)
-                            .addComponent(jButton5))
+                            .addComponent(btnListaProductos)
+                            .addComponent(btnNuevaVenta)
+                            .addComponent(btnCliente)
+                            .addComponent(btnListaVentas)
+                            .addComponent(btnSalir))
                         .addGap(41, 41, 41)
-                        .addComponent(jTabbedPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 897, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addComponent(tableVentaListaVenta, javax.swing.GroupLayout.PREFERRED_SIZE, 897, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addGap(146, 146, 146)
-                .addComponent(jButton1)
+                .addComponent(btnNuevaVenta)
                 .addGap(30, 30, 30)
-                .addComponent(jButton2)
+                .addComponent(btnListaProductos)
                 .addGap(37, 37, 37)
-                .addComponent(jButton3)
+                .addComponent(btnCliente)
                 .addGap(39, 39, 39)
-                .addComponent(jButton4)
+                .addComponent(btnListaVentas)
                 .addGap(36, 36, 36)
-                .addComponent(jButton5)
+                .addComponent(btnSalir)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 83, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(jTabbedPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 375, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(tableVentaListaVenta, javax.swing.GroupLayout.PREFERRED_SIZE, 375, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(11, 11, 11))
         );
 
@@ -472,25 +608,30 @@ public class Vendedor extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void txtProductoKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtProductoKeyPressed
-       if (evt.getKeyCode() == KeyEvent.VK_ENTER) {
-        String nombre = txtProducto.getText().trim();
+         if (evt.getKeyCode() == KeyEvent.VK_ENTER) {
+        // Si hay un producto seleccionado en la lista de sugerencias
+        if (popupSugerencias.isVisible() && listaSugerencias.getSelectedIndex() >= 0) {
+            seleccionarProductoDeLista(); // ✅ Usa el método ya creado
+            return; // Termina aquí para no continuar con la búsqueda manual
+        }
 
+        // ↓↓↓ Si no hay sugerencia seleccionada, continuar con la búsqueda normal
+        String nombre = txtProducto.getText().trim();
         if (!nombre.isEmpty()) {
             try {
                 BDGestionarProductos dao = new BDGestionarProductos();
                 Producto producto = (Producto) dao.obtenerporNombre(nombre);
-
                 if (producto != null) {
                     txtPrecio.setText(String.valueOf(producto.getPrecioUnitario()));
                     txtStock.setText(String.valueOf(producto.getStock()));
                     txtCantidad.requestFocus();
                 } else {
-                   JOptionPane.showMessageDialog(this, "Producto no encontrado");
-                     limpiar();
-                     txtProducto.requestFocus();
+                    JOptionPane.showMessageDialog(this, "Producto no encontrado");
+                    limpiar();
+                    txtProducto.requestFocus();
                 }
             } catch (Exception ex) {
-               JOptionPane.showMessageDialog(this, "Error al buscar producto: " + ex.getMessage());
+                JOptionPane.showMessageDialog(this, "Error al buscar producto: " + ex.getMessage());
             }
         }
     }
@@ -500,7 +641,7 @@ public class Vendedor extends javax.swing.JFrame {
         if (evt.getKeyCode() == KeyEvent.VK_ENTER){
         if(!"".equals(txtCantidad.getText())){
          String nombre = txtProducto.getText();
-         String cliente = cmbCliente.getSelectedItem().toString();
+         String cliente = txtCliente.getText();
          String empleado = cmbEmpleado.getSelectedItem().toString();
          int cant = Integer.parseInt(txtCantidad.getText());
          double precio = Double.parseDouble(txtPrecio.getText());
@@ -556,7 +697,8 @@ public class Vendedor extends javax.swing.JFrame {
     }//GEN-LAST:event_txtTotalPagarActionPerformed
 
     private void btnImprimirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnImprimirActionPerformed
-           try {
+          try {
+              validarVenta();
         // ✅ Validar si hay productos en la tabla
         if (tblVenta.getRowCount() == 0) {
             JOptionPane.showMessageDialog(this, "No hay productos para vender.");
@@ -568,13 +710,17 @@ public class Vendedor extends javax.swing.JFrame {
         venta.setTotal(Float.parseFloat(txtTotalPagar.getText()));
 
         // Buscar cliente por nombre
-       Cliente cliente = (Cliente) cmbCliente.getSelectedItem();
-       
-        venta.setCliente(cliente);
+       String nombreCliente = txtCliente.getText().trim();
+BDGestionarClientes daoCliente = new BDGestionarClientes();
+Cliente cliente = daoCliente.obtenerPorNombre(nombreCliente);
+
+
+
+venta.setCliente(cliente); 
 
         // Buscar empleado por nombre
         
-        Empleado empleado = (Empleado) cmbEmpleado.getSelectedItem();
+        Empleado empleado = mce.getSeleccionado();
         if (empleado == null) {
             JOptionPane.showMessageDialog(this, "Empleado no encontrado");
             return;
@@ -582,7 +728,7 @@ public class Vendedor extends javax.swing.JFrame {
         venta.setEmpleado(empleado);
         // Método de pago
      
-        MetodoPago metodo = (MetodoPago) cmbTipoPago.getSelectedItem();
+        MetodoPago metodo = mctp.getSeleccionado();
         
         venta.setMetodoPago(metodo);
 
@@ -598,7 +744,7 @@ public class Vendedor extends javax.swing.JFrame {
         BDGestionarDetalleVenta detalleDao = new BDGestionarDetalleVenta();
         for (int i = 0; i < tblVenta.getRowCount(); i++) {
             DetalleVenta det = new DetalleVenta();
-            det.setVenta(new Venta(idVentaGenerada, 0, null, null, null));
+            det.setVenta(new Venta(idVentaGenerada, 0, null, null, null, null));
 
             Producto p = new Producto();
             String nombreProducto = tblVenta.getValueAt(i, 0).toString();
@@ -617,7 +763,7 @@ public class Vendedor extends javax.swing.JFrame {
         txtTotalPagar.setText("0.00");
     } catch (Exception ex) {
         JOptionPane.showMessageDialog(this, "Error al registrar venta: " + ex.getMessage());
-        ex.printStackTrace();
+        
     }
     }//GEN-LAST:event_btnImprimirActionPerformed
 
@@ -625,22 +771,59 @@ public class Vendedor extends javax.swing.JFrame {
         // TODO add your handling code here:
     }//GEN-LAST:event_txtProductoActionPerformed
 
+    private void btnNuevaVentaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnNuevaVentaActionPerformed
+         tableVentaListaVenta.setSelectedIndex(0); // TODO add your handling code here:
+    }//GEN-LAST:event_btnNuevaVentaActionPerformed
+
+    private void btnListaProductosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnListaProductosActionPerformed
+         tableVentaListaVenta.setSelectedIndex(1);// TODO add your handling code here:
+    }//GEN-LAST:event_btnListaProductosActionPerformed
+
+    private void btnClienteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnClienteActionPerformed
+        tableVentaListaVenta.setSelectedIndex(2);// TODO add your handling code here:
+    }//GEN-LAST:event_btnClienteActionPerformed
+
+    private void btnListaVentasActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnListaVentasActionPerformed
+        tableVentaListaVenta.setSelectedIndex(3);// TODO add your handling code here:
+    }//GEN-LAST:event_btnListaVentasActionPerformed
+
+    private void btnSalirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSalirActionPerformed
+       this.dispose(); // TODO add your handling code here:
+    }//GEN-LAST:event_btnSalirActionPerformed
+
+    private void txtClienteKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtClienteKeyPressed
+      
+     if (evt.getKeyCode() == KeyEvent.VK_ENTER) {
+        // ✅ Si hay un cliente seleccionado en la lista de sugerencias
+        if (popupSugerencias.isVisible() && listaSugerencias.getSelectedIndex() >= 0) {
+            seleccionarClienteDeLista(); // <--- Aquí se oculta el popup y se asigna
+            return;
+        }
+    }
+
+   
+// TODO add your handling code here:
+    }//GEN-LAST:event_txtClienteKeyPressed
+
+    private void txtProductoKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtProductoKeyReleased
+        // TODO add your handling code here:
+    }//GEN-LAST:event_txtProductoKeyReleased
+
     /**
      * @param args the command line arguments
      */
    
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton btnCliente;
     private javax.swing.JButton btnEliminar;
     private javax.swing.JButton btnImprimir;
-    private javax.swing.JComboBox<String> cmbCliente;
+    private javax.swing.JButton btnListaProductos;
+    private javax.swing.JButton btnListaVentas;
+    private javax.swing.JButton btnNuevaVenta;
+    private javax.swing.JButton btnSalir;
     private javax.swing.JComboBox<String> cmbEmpleado;
     private javax.swing.JComboBox<String> cmbTipoPago;
-    private javax.swing.JButton jButton1;
-    private javax.swing.JButton jButton2;
-    private javax.swing.JButton jButton3;
-    private javax.swing.JButton jButton4;
-    private javax.swing.JButton jButton5;
     private javax.swing.JButton jButton7;
     private javax.swing.JButton jButton8;
     private javax.swing.JButton jButton9;
@@ -664,12 +847,13 @@ public class Vendedor extends javax.swing.JFrame {
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JScrollPane jScrollPane3;
     private javax.swing.JScrollPane jScrollPane4;
-    private javax.swing.JTabbedPane jTabbedPane1;
     private javax.swing.JTable jTable2;
     private javax.swing.JTable jTable3;
     private javax.swing.JTable jTable4;
+    private javax.swing.JTabbedPane tableVentaListaVenta;
     private javax.swing.JTable tblVenta;
     private javax.swing.JTextField txtCantidad;
+    private javax.swing.JTextField txtCliente;
     private javax.swing.JTextField txtPrecio;
     private javax.swing.JTextField txtProducto;
     private javax.swing.JTextField txtStock;
@@ -692,6 +876,7 @@ private void limpiar(){
     this.txtPrecio.setText("");
     this.txtStock.setText("");
 }
+
 
 private int obtenerIdProductoPorNombre(String nombreProducto) throws Exception {
     BDGestionarProductos dao = new BDGestionarProductos();
@@ -738,19 +923,104 @@ private void cargarComboEmpleado() {
                     JOptionPane.ERROR_MESSAGE);
     }
     }
-private void cargarComboCliente() {
+
+private void mostrarSugerenciasProducto() {
+    Campo= true;
+    String texto = txtProducto.getText().trim().toLowerCase();
+    modeloSugerencias.clear();
+    
+    if (texto.length() < 1) {
+        popupSugerencias.setVisible(false);
+        return;
+    }
     
     try {
-        BDGestionarClientes bd_GCP = new BDGestionarClientes();
-        ArrayList arrTD = bd_GCP.listar();
-        this.mcc.setListadoRol(arrTD);
-         cmbCliente.setModel(mcc);
+        BDGestionarProductos dao = new BDGestionarProductos();
+        ArrayList<Producto> productos = dao.listar();
+        
+        for (Producto p : productos) {
+            String nombreProducto = p.getNombre().toLowerCase();
+            String nombreCategoria = p.getCategoriaProducto().getNombrecat().toLowerCase();
+
+            if (nombreProducto.contains(texto) || nombreCategoria.contains(texto)) {
+                modeloSugerencias.addElement(p.getNombre());
+            }
+        }
+
+        if (modeloSugerencias.isEmpty()) {
+            popupSugerencias.setVisible(false);
+        } else {
+            listaSugerencias.setSelectedIndex(0);
+            popupSugerencias.show(txtProducto, 0, txtProducto.getHeight());
+            txtProducto.requestFocus();
+        }
     } catch (Exception e) {
-        JOptionPane.showMessageDialog(
-                    this, 
-                    "ERROR: " +e.getMessage(), 
-                    "Error de Base de Datos", 
-                    JOptionPane.ERROR_MESSAGE);
+        JOptionPane.showMessageDialog(this, "Error al buscar sugerencias: " + e.getMessage());
+    }
+}
+
+
+private void mostrarSugerenciasCliente() {
+    String texto = txtCliente.getText().trim().toLowerCase();
+    modeloSugerencias.clear();
+    
+    if (texto.length() < 1) {
+        popupSugerencias.setVisible(false);
+        return;
+    }
+    
+    try {
+        BDGestionarClientes dao = new BDGestionarClientes();
+        ArrayList<Cliente> clientes = dao.listar();
+        
+        for (Cliente c : clientes) {
+            String nombreCliente = c.getNombre().toLowerCase();
+            if (nombreCliente.contains(texto)) {
+                modeloSugerencias.addElement(c.getNombre());
+            }
+        }
+
+        if (modeloSugerencias.isEmpty()) {
+            popupSugerencias.setVisible(false);
+        } else {
+            listaSugerencias.setSelectedIndex(0);
+            popupSugerencias.show(txtCliente, 0, txtCliente.getHeight());
+            txtCliente.requestFocus();
+        }
+
+    } catch (Exception e) {
+        JOptionPane.showMessageDialog(this, "Error al buscar sugerencias: " + e.getMessage());
+    }
+}
+
+private void seleccionarProductoDeLista() {
+    String seleccionado = listaSugerencias.getSelectedValue();
+    if (seleccionado != null) {
+        txtProducto.setText(seleccionado);
+        popupSugerencias.setVisible(false);
+        // Simular enter para cargar los datos del producto
+        KeyEvent evt = new KeyEvent(txtProducto, KeyEvent.KEY_PRESSED, System.currentTimeMillis(), 0, KeyEvent.VK_ENTER, '\n');
+        txtProductoKeyPressed(evt);
+    }
+}
+
+private void seleccionarClienteDeLista() {
+    String seleccionado = listaSugerencias.getSelectedValue();
+    if (seleccionado != null) {
+        txtCliente.setText(seleccionado);
+        popupSugerencias.setVisible(false);
+        txtCliente.requestFocus();
+    }
+}
+ private void validarVenta() {
+            try {
+       
+        if (this.mctp.getSeleccionado() == null) {
+            throw new IllegalArgumentException("Debe seleccionar un Rol para el empleado.");
+        }
+
+    } catch (Exception e) {
+        throw e;
     }
     }
 }

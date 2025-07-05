@@ -163,17 +163,21 @@ public class JIF_GestionMetodoPagos extends javax.swing.JInternalFrame {
     private void btnCancelarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCancelarActionPerformed
       this.activarControles(false);
         limpiarFormulario();        // TODO add your handling code here:
+        tblMetodo.clearSelection();  // ← quita la selección en la tabla
+        this.indexElemSelecc = -1;              // ← desactiva la edición o eliminación
     }//GEN-LAST:event_btnCancelarActionPerformed
 
     private void btnNuevoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnNuevoActionPerformed
         this.activarControles(true);
+        tblMetodo.clearSelection();  // ← quita la selección en la tabla
+        this.indexElemSelecc = -1;              // ← desactiva la edición o eliminación
     }//GEN-LAST:event_btnNuevoActionPerformed
 
     private void btnGuardarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnGuardarActionPerformed
          // TODO add your handling code here:
         MetodoPago objP = new MetodoPago();
         try{
-            
+            this.validarMetodoPago();
             objP.setTipoPago(this.txtTipo.getText());
            
 
@@ -191,6 +195,8 @@ public class JIF_GestionMetodoPagos extends javax.swing.JInternalFrame {
             cargarGestionTablaMetodoPago();
             this.limpiarFormulario();
             this.activarControles(false);
+            tblMetodo.clearSelection();  // ← quita la selección en la tabla
+            this.indexElemSelecc = -1;              // ← desactiva la edición o eliminación
             
         } catch (Exception e) {
             JOptionPane.showMessageDialog(this, e.getMessage());
@@ -201,8 +207,12 @@ public class JIF_GestionMetodoPagos extends javax.swing.JInternalFrame {
     }//GEN-LAST:event_btnGuardarActionPerformed
 
     private void btnModificarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnModificarActionPerformed
-  this.indexElemSelecc = this.tblMetodo.getSelectedRow();
-        if(this.indexElemSelecc < 0) return;
+   this.indexElemSelecc = this.tblMetodo.getSelectedRow();
+
+if (indexElemSelecc == -1) {
+    JOptionPane.showMessageDialog(this, "Seleccione un metodo de pago de la tabla.", "Advertencia", JOptionPane.WARNING_MESSAGE);
+    return;
+} else {
         
         MetodoPago objC = mtmp.getMetodoPago(indexElemSelecc);
         try {
@@ -211,9 +221,10 @@ public class JIF_GestionMetodoPagos extends javax.swing.JInternalFrame {
             
             this.txtTipo.setText( objC.getTipoPago());
             this.activarControles(true);
+            tblMetodo.clearSelection();  // ← quita la selección en la tabla
         } catch (Exception e) {
         }
-        this.activarControles(true);        
+        }        
     }//GEN-LAST:event_btnModificarActionPerformed
 
     private void btnEliminarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEliminarActionPerformed
@@ -231,6 +242,8 @@ if (indexElemSelecc == -1) {
             BDGestionMetodoPago bd = new BDGestionMetodoPago();
             bd.eliminar(met.getId());
             cargarGestionTablaMetodoPago(); // recarga la tabla con datos actualizados
+            tblMetodo.clearSelection();  // ← quita la selección en la tabla
+            this.indexElemSelecc = -1;              // ← desactiva la edición o eliminación
         } catch (Exception e) {
             JOptionPane.showMessageDialog(this, "Error al eliminar: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
         }
@@ -280,5 +293,16 @@ private void cargarGestionTablaMetodoPago() {
         this.btnModificar.setEnabled(!estado);
         this.btnEliminar.setEnabled(!estado);
 
+    }
+    private void validarMetodoPago() {
+            try {
+        if (txtTipo.getText().trim().isEmpty()) {
+            throw new IllegalArgumentException("El campo Tipo de pago no puede estar vacío.");
+        }
+        
+
+    } catch (Exception e) {
+        throw e;
+    }
     }
 }

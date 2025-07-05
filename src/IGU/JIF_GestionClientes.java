@@ -80,11 +80,11 @@ public class JIF_GestionClientes extends javax.swing.JInternalFrame {
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addGap(6, 6, 6)
                         .addComponent(btnModificar)
-                        .addGap(220, 220, 220)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(btnEliminar))
                     .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 386, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(303, 303, 303))
@@ -208,8 +208,8 @@ public class JIF_GestionClientes extends javax.swing.JInternalFrame {
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
-                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, 404, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, 413, Short.MAX_VALUE)
+                .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -223,9 +223,10 @@ public class JIF_GestionClientes extends javax.swing.JInternalFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnGuardarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnGuardarActionPerformed
-       Cliente objP = new Cliente();
+      
         try{
-            
+            this.validarCliente();
+            Cliente objP = new Cliente();
             objP.setNombre(this.txtNombres.getText());
             objP.setApellidos(this.txtApellidos.getText());
             objP.setDni(this.txtDNI.getText());
@@ -246,7 +247,8 @@ public class JIF_GestionClientes extends javax.swing.JInternalFrame {
             cargarTabla();
             this.limpiarFormulario();
             this.activarControles(false);
-            
+            tblCliente.clearSelection();  // ← quita la selección en la tabla
+            this.indexElemSelecc = -1;              // ← desactiva la edición o eliminación
         } catch (Exception e) {
             JOptionPane.showMessageDialog(this, e.getMessage());
       
@@ -255,11 +257,13 @@ public class JIF_GestionClientes extends javax.swing.JInternalFrame {
     }//GEN-LAST:event_btnGuardarActionPerformed
 
     private void btnModificarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnModificarActionPerformed
-          this.indexElemSelecc = this.tblCliente.getSelectedRow();
-        if(this.indexElemSelecc < 0) return;
-        
-        Cliente objC = mtc.getCliente(indexElemSelecc);
+           this.indexElemSelecc = this.tblCliente.getSelectedRow();
+    if (indexElemSelecc == -1) {
+        JOptionPane.showMessageDialog(this, "Seleccione un cliente de la tabla.", "Advertencia", JOptionPane.WARNING_MESSAGE);
+        return;
+    } else{   
         try {
+            Cliente objC = mtc.getCliente(indexElemSelecc);
             BDGestionarClientes bdCli = new BDGestionarClientes();
             objC = (Cliente) bdCli.obtenerCliente(objC.getNombre());
             
@@ -269,9 +273,11 @@ public class JIF_GestionClientes extends javax.swing.JInternalFrame {
             this.txtTelefono.setText(objC.getTelefono());
             
             this.activarControles(true);
+            tblCliente.clearSelection();  // ← quita la selección en la tabla
+                       
         } catch (Exception e) {
         }
-        this.activarControles(true);
+    }
     }//GEN-LAST:event_btnModificarActionPerformed
 
     private void btnEliminarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEliminarActionPerformed
@@ -288,7 +294,8 @@ public class JIF_GestionClientes extends javax.swing.JInternalFrame {
         BDGestionarClientes bd = new BDGestionarClientes();
         bd.eliminar(cli.getId());
         cargarTabla();       // recarga la tabla con datos actualizados
-
+        tblCliente.clearSelection();  // ← quita la selección en la tabla
+        this.indexElemSelecc = -1;              // ← desactiva la edición o eliminación
     } catch (Exception e) {
         JOptionPane.showMessageDialog(this, "Error al eliminar: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
     }
@@ -300,10 +307,14 @@ public class JIF_GestionClientes extends javax.swing.JInternalFrame {
     private void btnCancelarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCancelarActionPerformed
         this.activarControles(false);
         this.limpiarFormulario();
+        tblCliente.clearSelection();  // ← quita la selección en la tabla
+        this.indexElemSelecc = -1;              // ← desactiva la edición o eliminación
     }//GEN-LAST:event_btnCancelarActionPerformed
 
     private void btnNuevoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnNuevoActionPerformed
        this.activarControles(true);
+       tblCliente.clearSelection();  // ← quita la selección en la tabla
+       this.indexElemSelecc = -1;              // ← desactiva la edición o eliminación
     }//GEN-LAST:event_btnNuevoActionPerformed
 
 
@@ -357,5 +368,30 @@ public void cargarTabla(){
         this.txtTelefono.setEnabled(estado);
         this.btnEliminar.setEnabled(!estado);
         this.btnModificar.setEnabled(!estado);
+}
+    private void validarCliente() {
+    try {
+        if (txtNombres.getText().trim().isEmpty()) {
+            throw new IllegalArgumentException("El campo Nombre no puede estar vacío.");
+        }
+        if (txtApellidos.getText().trim().isEmpty()) {
+            throw new IllegalArgumentException("El campo Apellido no puede estar vacío.");
+        }
+        if (txtDNI.getText().trim().isEmpty()) {
+            throw new IllegalArgumentException("El campo DNI no puede estar vacío.");
+        }
+        if (!txtDNI.getText().trim().matches("\\d{8}")) {
+            throw new IllegalArgumentException("El DNI debe contener exactamente 8 dígitos numéricos.");
+        }
+        if (txtTelefono.getText().trim().isEmpty()) {
+            throw new IllegalArgumentException("El campo Teléfono no puede estar vacío.");
+        }
+        if (!txtTelefono.getText().trim().matches("9\\d{8}")) {
+            throw new IllegalArgumentException("El teléfono debe tener 9 dígitos y empezar con '9'.");
+        }
+
+    } catch (Exception e) {
+        throw e;
+    }
 }
 }

@@ -158,6 +158,7 @@ public class JF_InicioSesion extends javax.swing.JFrame {
                         "Bloqueo de seguridad", JOptionPane.ERROR_MESSAGE);
                 System.exit(0);
             }
+            
         }
     } catch (IllegalArgumentException ex) {
         JOptionPane.showMessageDialog(this, ex.getMessage(), "Validación", JOptionPane.WARNING_MESSAGE);

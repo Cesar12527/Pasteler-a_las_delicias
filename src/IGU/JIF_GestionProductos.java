@@ -261,6 +261,8 @@ public class JIF_GestionProductos extends javax.swing.JInternalFrame {
             cargarGestionTablaProducto();
             this.limpiarFormulario();
             this.activarControles(false);
+            tblProductos.clearSelection();  // ← quita la selección en la tabla
+            this.indexElemSelecc = -1;              // ← desactiva la edición o eliminación
             
         } catch (Exception e) {
             JOptionPane.showMessageDialog(this, e.getMessage());
@@ -272,14 +274,18 @@ public class JIF_GestionProductos extends javax.swing.JInternalFrame {
     }//GEN-LAST:event_btnGuardarActionPerformed
 
     private void bntNuevoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bntNuevoActionPerformed
-
-        this.activarControles(true);
+         this.activarControles(true);
+         tblProductos.clearSelection();  // ← quita la selección en la tabla
+         this.indexElemSelecc = -1;              // ← desactiva la edición o eliminación
     }//GEN-LAST:event_bntNuevoActionPerformed
 
     private void btnModificarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnModificarActionPerformed
          this.indexElemSelecc = this.tblProductos.getSelectedRow();
-        if(this.indexElemSelecc < 0) return;
-        
+
+if (indexElemSelecc == -1) {
+    JOptionPane.showMessageDialog(this, "Seleccione un producto de la tabla.", "Advertencia", JOptionPane.WARNING_MESSAGE);
+    return;
+} else {
         Producto objC = modeloGestionProd.getProducto(indexElemSelecc);
         try {
             BDGestionarProductos bdCli = new BDGestionarProductos();
@@ -291,14 +297,17 @@ public class JIF_GestionProductos extends javax.swing.JInternalFrame {
             this.modeloComboCP.setSeleccionado(objC.getCategoriaProducto());
             this.cmbCategoria.setSelectedItem(objC.getCategoriaProducto());
             this.activarControles(true);
+            tblProductos.clearSelection();  // ← quita la selección en la tabla
         } catch (Exception e) {
         }
-        this.activarControles(true);
+}
     }//GEN-LAST:event_btnModificarActionPerformed
 
     private void btnCancelarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCancelarActionPerformed
         this.activarControles(false);
         limpiarFormulario();
+        tblProductos.clearSelection();  // ← quita la selección en la tabla
+        this.indexElemSelecc = -1;              // ← desactiva la edición o eliminación
     }//GEN-LAST:event_btnCancelarActionPerformed
 
     private void btnEliminarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEliminarActionPerformed
@@ -315,7 +324,9 @@ if (indexElemSelecc == -1) {
             Producto prod = modeloGestionProd.getProducto(indexElemSelecc); // obtén el producto del modelo de tabla
             BDGestionarProductos bd = new BDGestionarProductos();
             bd.eliminar(prod.getId());
-            cargarGestionTablaProducto(); // recarga la tabla con datos actualizados
+            cargarGestionTablaProducto();
+             tblProductos.clearSelection();  // ← quita la selección en la tabla
+            this.indexElemSelecc = -1;              // ← desactiva la edición o eliminación// recarga la tabla con datos actualizados
         } catch (Exception e) {
             JOptionPane.showMessageDialog(this, "Error al eliminar: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
         }
@@ -376,22 +387,33 @@ if (indexElemSelecc == -1) {
     }
 
     private void validarProducto() {
-                   try {
-            if (txtNombreProd.getText().trim().isEmpty()) {
-                throw new IllegalArgumentException("El campo Nombre no puede estar vacio.");
-            }
-            if (txtPrecio.getText().trim().isEmpty()) {
-                throw new IllegalArgumentException("El campo Precio no puede estar vacio.");
-            }
-            if (txtStock.getText().trim().isEmpty()) {
-                throw new IllegalArgumentException("El Stock no puede estar vacio.");
-            } 
-            if(this.cmbCategoria.getSelectedIndex() == 0){
-            JOptionPane.showMessageDialog(this, "Por favor elige una categoria.");
+            try {
+        if (txtNombreProd.getText().trim().isEmpty()) {
+            throw new IllegalArgumentException("El campo Nombre no puede estar vacío.");
         }
-        } catch (Exception e) {
-            throw e;
+         if (this.modeloComboCP.getSeleccionado() == null) {
+            throw new IllegalArgumentException("Debe seleccionar una categoria para el empleado.");
+        }
+        if (txtPrecio.getText().trim().isEmpty()) {
+            throw new IllegalArgumentException("El campo Precio no puede estar vacío.");
+        }
+       
+        if (txtStock.getText().trim().isEmpty()) {
+            throw new IllegalArgumentException("El campo Stock no puede estar vacío.");
         } 
+    try {
+    int stock = Integer.parseInt(txtStock.getText().trim());
+    if (stock < 0) {
+        throw new IllegalArgumentException("El Stock no puede ser negativo.");
+    }
+    } catch (NumberFormatException ex) {
+    throw new IllegalArgumentException("El Stock debe ser un número entero válido.");
+    }
+        
+
+    } catch (Exception e) {
+        throw e;
+    }
     }
 
     private void limpiarFormulario() {

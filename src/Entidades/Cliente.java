@@ -61,7 +61,7 @@ public class Cliente {
 
     @Override
     public String toString() {
-        return  this.nombre;
+        return (nombre != null) ? nombre : "Sin cliente";
     }
     
     public String verDatos() {

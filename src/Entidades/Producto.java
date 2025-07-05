@@ -69,6 +69,7 @@ public class Producto {
         this.categoriaProducto = categoriaProducto;
     }
     
+    
 
     @Override
     public String toString() {

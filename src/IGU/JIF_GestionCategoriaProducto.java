@@ -16,6 +16,7 @@ public class JIF_GestionCategoriaProducto extends javax.swing.JInternalFrame {
         this.cargarTabla();
         this.limpiarFormulario();
         this.activarControles(false);
+        
     }
 public static JIF_GestionCategoriaProducto getInstancia(){
         
@@ -203,7 +204,7 @@ public static JIF_GestionCategoriaProducto getInstancia(){
     private void btnGuardarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnGuardarActionPerformed
     CategoriaProducto objP = new CategoriaProducto();
         try{
-            
+            this.validarCategoriaProducto();
             objP.setNombrecat(this.txtNombre.getText());
             objP.setDescripcion(this.txtDescripción.getText());
 
@@ -221,6 +222,8 @@ public static JIF_GestionCategoriaProducto getInstancia(){
                  
             }
             cargarTabla();
+             tblCategoriaProducto.clearSelection();  // ← quita la selección en la tabla
+this.indexElemSelecc = -1;              // ← desactiva la edición o eliminación
             this.limpiarFormulario();
             this.activarControles(false);
             
@@ -233,7 +236,11 @@ public static JIF_GestionCategoriaProducto getInstancia(){
 
     private void btnModificarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnModificarActionPerformed
       this.indexElemSelecc = this.tblCategoriaProducto.getSelectedRow();
-        if(this.indexElemSelecc < 0) return;
+        if (indexElemSelecc == -1) {
+        JOptionPane.showMessageDialog(this, "Seleccione una categoria de producto de la tabla.", "Advertencia", JOptionPane.WARNING_MESSAGE);
+        return;
+    } else{
+            
         
         CategoriaProducto objC = mtcp.getCategoriaProducto(indexElemSelecc);
         try {
@@ -244,18 +251,23 @@ public static JIF_GestionCategoriaProducto getInstancia(){
             this.txtDescripción.setText(objC.getDescripcion());
             
             this.activarControles(true);
+             tblCategoriaProducto.clearSelection();  // ← quita la selección en la tabla
         } catch (Exception e) {
         }
-        this.activarControles(true);
+        }
+       
     }//GEN-LAST:event_btnModificarActionPerformed
 
     private void btonNuevoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btonNuevoActionPerformed
         this.activarControles(true);
+        tblCategoriaProducto.clearSelection();  // ← quita la selección en la tabla
+        this.indexElemSelecc = -1;              // ← desactiva la edición o eliminación
     }//GEN-LAST:event_btonNuevoActionPerformed
 
     private void btnCancelarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCancelarActionPerformed
         this.activarControles(false);
         this.limpiarFormulario();
+                      // ← desactiva la edición o eliminación
     }//GEN-LAST:event_btnCancelarActionPerformed
 
     private void btnEliminarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEliminarActionPerformed
@@ -272,6 +284,8 @@ public static JIF_GestionCategoriaProducto getInstancia(){
         BDGestionTipoProductos bd = new BDGestionTipoProductos();
         bd.eliminar(cli.getId());
         cargarTabla();       // recarga la tabla con datos actualizados
+        tblCategoriaProducto.clearSelection();  // ← quita la selección en la tabla
+        this.indexElemSelecc = -1;              // ← desactiva la edición o eliminación               
 
     } catch (Exception e) {
         JOptionPane.showMessageDialog(this, "Error al eliminar: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
@@ -327,5 +341,14 @@ private void limpiarFormulario() {
         this.btnCancelar.setEnabled(estado);
         this.btnEliminar.setEnabled(!estado);
         this.btnModificar.setEnabled(!estado);
+}
+    private void validarCategoriaProducto()  {
+    if (txtNombre.getText().trim().isEmpty()) {
+        throw new IllegalArgumentException("El campo Nombre no puede estar vacío.");
+    }
+
+    if (txtDescripción.getText().trim().isEmpty()) {
+        throw new IllegalArgumentException("El campo Descripción no puede estar vacío.");
+    }
 }
 }

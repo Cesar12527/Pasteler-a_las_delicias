@@ -13,7 +13,7 @@ public class BDGestionEmpleados implements ICRUD {
     public ArrayList listar() throws Exception {
         ArrayList<Empleado> lista = new ArrayList<>();
         String sql = """
-            SELECT e.idEmpleado, e.nombreEmpleado, e.apellidos, e.correo, e.estado, 
+            SELECT e.idEmpleado, e.nombreEmpleado, e.apellidos, e.dni, e.telefono, e.correo, e.estado, 
                    u.id, u.usuario, u.clave
             FROM empleado e
             INNER JOIN usuario u ON e.id_usuario = u.id
@@ -36,6 +36,8 @@ public class BDGestionEmpleados implements ICRUD {
                 emp.setIdEmpleado(rs.getInt("idEmpleado"));
                 emp.setNombreEmpleado(rs.getString("nombreEmpleado"));
                 emp.setApellidos(rs.getString("apellidos"));
+                emp.setDni(rs.getString("dni"));
+                emp.setTelefono(rs.getString("telefono")); 
                 emp.setCorreo(rs.getString("correo"));
                 emp.setEstado(rs.getString("estado"));
                 emp.setUsuario(u);
@@ -55,8 +57,8 @@ public class BDGestionEmpleados implements ICRUD {
         int idGenerado = -1;
 
         String sql = """
-            INSERT INTO empleado(nombreEmpleado, apellidos, correo, estado, id_usuario)
-            VALUES (?, ?, ?, ?, ?)
+            INSERT INTO empleado(nombreEmpleado, apellidos, dni, telefono, correo, estado, id_usuario)
+            VALUES (?, ?, ?, ?, ?,?,?)
         """;
 
         try (
@@ -65,9 +67,11 @@ public class BDGestionEmpleados implements ICRUD {
         ) {
             ps.setString(1, emp.getNombreEmpleado());
             ps.setString(2, emp.getApellidos());
-            ps.setString(3, emp.getCorreo());
-            ps.setString(4, emp.getEstado());
-            ps.setInt(5, emp.getUsuario().getId());
+            ps.setString(3, emp.getDni());
+            ps.setString(4, emp.getTelefono());
+            ps.setString(5, emp.getCorreo());
+            ps.setString(6, emp.getEstado());
+            ps.setInt(7, emp.getUsuario().getId());
             ps.executeUpdate();
 
             try (ResultSet rs = ps.getGeneratedKeys()) {
@@ -88,7 +92,7 @@ public class BDGestionEmpleados implements ICRUD {
 
         String sql = """
             UPDATE empleado
-            SET nombreEmpleado = ?, apellidos = ?, correo = ?, estado = ?, id_usuario = ?
+            SET nombreEmpleado = ?, apellidos = ?,dni = ?, telefono=?, correo = ?, estado = ?, id_usuario = ?
             WHERE idEmpleado = ?
         """;
 
@@ -98,10 +102,12 @@ public class BDGestionEmpleados implements ICRUD {
         ) {
             ps.setString(1, emp.getNombreEmpleado());
             ps.setString(2, emp.getApellidos());
-            ps.setString(3, emp.getCorreo());
-            ps.setString(4, emp.getEstado());
-            ps.setInt(5, emp.getUsuario().getId());
-            ps.setInt(6, id);
+            ps.setString(3, emp.getDni());
+            ps.setString(4, emp.getTelefono());
+            ps.setString(5, emp.getCorreo());
+            ps.setString(6, emp.getEstado());
+            ps.setInt(7, emp.getUsuario().getId());
+            ps.setInt(8, id);
             ps.executeUpdate();
         } catch (Exception e) {
             throw e;
@@ -127,7 +133,7 @@ public class BDGestionEmpleados implements ICRUD {
         Empleado emp = null;
 
         String sql = """
-    SELECT e.idEmpleado, e.nombreEmpleado, e.apellidos, e.correo, e.estado,
+    SELECT e.idEmpleado, e.nombreEmpleado, e.apellidos, e.dni, e.telefono, e.correo, e.estado,
            u.id AS id, u.usuario, u.clave
     FROM empleado e
     INNER JOIN usuario u ON e.id_usuario = u.id
@@ -151,6 +157,8 @@ public class BDGestionEmpleados implements ICRUD {
     emp.setIdEmpleado(rs.getInt("idEmpleado"));
     emp.setNombreEmpleado(rs.getString("nombreEmpleado"));
     emp.setApellidos(rs.getString("apellidos"));
+    emp.setDni(rs.getString("dni"));
+    emp.setTelefono(rs.getString("telefono"));
     emp.setCorreo(rs.getString("correo"));
     emp.setEstado(rs.getString("estado"));
     emp.setUsuario(u);

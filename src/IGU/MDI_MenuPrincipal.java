@@ -24,6 +24,7 @@ public class MDI_MenuPrincipal extends javax.swing.JFrame {
         jM_Ventas = new javax.swing.JMenu();
         MI_RealizarVenta = new javax.swing.JMenuItem();
         MI_MetodoPago = new javax.swing.JMenuItem();
+        MI_TablaVentas = new javax.swing.JMenuItem();
         jM_Caja1 = new javax.swing.JMenu();
         MI_Empleados = new javax.swing.JMenuItem();
         MI_Roles = new javax.swing.JMenuItem();
@@ -86,6 +87,14 @@ public class MDI_MenuPrincipal extends javax.swing.JFrame {
             }
         });
         jM_Ventas.add(MI_MetodoPago);
+
+        MI_TablaVentas.setText("Tabla Ventas");
+        MI_TablaVentas.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                MI_TablaVentasActionPerformed(evt);
+            }
+        });
+        jM_Ventas.add(MI_TablaVentas);
 
         menuBar.add(jM_Ventas);
 
@@ -298,6 +307,21 @@ public class MDI_MenuPrincipal extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_MI_ClientesActionPerformed
 
+    private void MI_TablaVentasActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_MI_TablaVentasActionPerformed
+       JIF_ListadoVentas Ventas = JIF_ListadoVentas.getInstancia();
+        if(!Ventas.isVisible()){
+        desktopPane.add(Ventas);
+        Ventas.setVisible(true);
+        } else {
+            try{
+                Ventas.setSelected(true);
+            Ventas.toFront();
+            }catch (Exception e){
+                System.out.println("error:"+e.getMessage());
+            }
+        }
+    }//GEN-LAST:event_MI_TablaVentasActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -313,6 +337,7 @@ public class MDI_MenuPrincipal extends javax.swing.JFrame {
     private javax.swing.JMenuItem MI_RealizarVenta;
     private javax.swing.JMenuItem MI_Roles;
     private javax.swing.JMenuItem MI_Salir;
+    private javax.swing.JMenuItem MI_TablaVentas;
     private javax.swing.JDesktopPane desktopPane;
     private javax.swing.JMenu jM_Caja1;
     private javax.swing.JMenu jM_CerrarSesion;

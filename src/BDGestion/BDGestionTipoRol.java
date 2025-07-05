@@ -50,5 +50,27 @@ public class BDGestionTipoRol implements ICRUD {
     public Object obtener(int id) throws Exception {
         throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
     }
-    
+    public TipoRol obtenerPorId(int id) throws Exception {
+    TipoRol rol = null;
+    String sql = "SELECT * FROM rol WHERE idRol = ?";
+
+    try (
+        Connection con = Conexion.conectar();
+        PreparedStatement ps = con.prepareStatement(sql)
+    ) {
+        ps.setInt(1, id);
+
+        try (ResultSet rs = ps.executeQuery()) {
+            if (rs.next()) {
+                rol = new TipoRol();
+                rol.setId(rs.getInt("idRol"));
+                rol.setNombre(rs.getString("nombreRol"));
+            }
+        }
+    } catch (Exception e) {
+        throw new Exception("Error al obtener rol: " + e.getMessage());
+    }
+
+    return rol;
+}
 }

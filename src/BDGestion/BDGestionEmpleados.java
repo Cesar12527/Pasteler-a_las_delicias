@@ -171,19 +171,34 @@ public class BDGestionEmpleados implements ICRUD {
         return emp;
     }
     public Empleado obtenerPorNombre(String nombre) throws Exception {
-    Empleado e = null;
+     Empleado emp = null;
     String sql = "SELECT * FROM empleado WHERE nombreEmpleado = ?";
+    
     try (Connection con = Conexion.conectar();
          PreparedStatement ps = con.prepareStatement(sql)) {
+        
         ps.setString(1, nombre);
-        ResultSet rs = ps.executeQuery();
-        if (rs.next()) {
-            e = new Empleado();
-            e.setIdEmpleado(rs.getInt("idEmpleado")); // o rs.getInt("id_empleado")
-            e.setNombreEmpleado(rs.getString("nombreEmpleado"));
+        try (ResultSet rs = ps.executeQuery()) {
+            if (rs.next()) {
+                emp = new Empleado();
+                emp.setIdEmpleado(rs.getInt("idEmpleado"));
+                emp.setNombreEmpleado(rs.getString("nombreEmpleado"));
+                emp.setApellidos(rs.getString("apellidos"));
+                emp.setDni(rs.getString("dni"));
+                emp.setTelefono(rs.getString("telefono"));
+
+                // Aquí se obtiene el ID del usuario y se lo carga completo
+                int idUsuario = rs.getInt("id_usuario");
+                BDGestionUsuario daoUsuario = new BDGestionUsuario();
+                Usuario u = daoUsuario.obtenerPorId(idUsuario); // ⚠️ Este método debe existir
+                emp.setUsuario(u);
+            }
         }
+    } catch (Exception e) {
+        throw new Exception("Error al obtener empleado por nombre: " + e.getMessage());
     }
-    return e;
+
+    return emp;
 }
 
 }

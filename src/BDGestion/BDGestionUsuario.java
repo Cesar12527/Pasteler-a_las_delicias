@@ -3,6 +3,7 @@ package BDGestion;
 
 import BaseDatos.Conexion;
 import BaseDatos.Seguridad;
+import Entidades.TipoRol;
 import Entidades.Usuario;
 import java.sql.*;
 import java.util.ArrayList;
@@ -86,5 +87,32 @@ public class BDGestionUsuario {
     return null; // usuario no encontrado o contraseña incorrecta
 }
 
- 
+ public Usuario obtenerPorId(int id) throws Exception {
+    Usuario u = null;
+    String sql = "SELECT * FROM usuario WHERE id = ?";
+    
+    try (Connection con = Conexion.conectar();
+         PreparedStatement ps = con.prepareStatement(sql)) {
+        
+        ps.setInt(1, id);
+        try (ResultSet rs = ps.executeQuery()) {
+            if (rs.next()) {
+                u = new Usuario();
+                u.setId(rs.getInt("id"));
+                u.setUsuario(rs.getString("usuario"));
+                u.setClaveHash(rs.getString("clave"));
+
+                 // ⚠️ CAMBIADO: columna real en tu BD
+                int idRol = rs.getInt("id_tipo_rol");
+
+                // Obtener el objeto TipoRol correspondiente
+                BDGestionTipoRol daoRol = new BDGestionTipoRol();
+                TipoRol rol = daoRol.obtenerPorId(idRol);
+                u.setTiporol(rol);
+            }
+        }
+    }
+    return u;
+}
+
 }

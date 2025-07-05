@@ -176,6 +176,7 @@ public void eliminar(int id) throws Exception {
             c = new Cliente();
             c.setId(rs.getInt("idCliente")); // o rs.getInt("id_cliente")
             c.setNombre(rs.getString("nombreCliente"));
+             c.setApellidos(rs.getString("apellidos"));
         }
     }
     return c;

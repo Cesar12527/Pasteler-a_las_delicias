@@ -397,56 +397,76 @@ txtCliente.addKeyListener(new java.awt.event.KeyAdapter() {
     }// </editor-fold>//GEN-END:initComponents
 
     private void txtCantidadKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtCantidadKeyPressed
-      if (evt.getKeyCode() == KeyEvent.VK_ENTER){
-        if(!"".equals(txtCantidad.getText())){
-         String nombre = txtProducto.getText();
-          String cliente = txtCliente.getText();
-          Empleado empleado = sesion.empleadoLogueado;
-          if (empleado == null) {
-          JOptionPane.showMessageDialog(this, "No hay empleado logueado.");
-          return;
-}
-         int cant = Integer.parseInt(txtCantidad.getText());
-         double precio = Double.parseDouble(txtPrecio.getText());
-         double total = cant * precio;
-         int stock = Integer.parseInt(txtStock.getText());
-         if(stock >= cant ){
-          model = (DefaultTableModel)tblVenta.getModel();
-          for(int i= 0; i<tblVenta.getRowCount(); i++){
-          if(tblVenta.getValueAt(i, 0).equals(nombre)){
-          JOptionPane.showMessageDialog(null, "El Producto ya está registrado");
-          return;
-          }
-          }
-          item = item + 1;
-         ArrayList list = new ArrayList(); 
-         list.add(item);
-         list.add(nombre);
-         list.add(cliente);
-         list.add(empleado);
-         list.add(cant);
-         list.add(precio);
-         list.add(total);
-         Object[] o = new Object[6];
-         o[0] = nombre;
-         o[1]= cliente;
-         o[2]= empleado;
-         o[3] = cant;
-         o[4] = precio;
-         o[5] = total;
-         model.addRow(o);
-         tblVenta.setModel(model);
-             totalPagar();
-             limpiar();
-             txtProducto.requestFocus();
-         }else{
-         JOptionPane.showMessageDialog(null, "Stock no disponible");
-         }
-        }else{
-        JOptionPane.showMessageDialog(null, "Ingrese cantidad");
+       if (evt.getKeyCode() == KeyEvent.VK_ENTER) {
+    String textoCantidad = txtCantidad.getText().trim();
+
+    if (!textoCantidad.isEmpty()) {
+        try {
+            int cant = Integer.parseInt(textoCantidad);
+            if (cant <= 0) {
+                throw new NumberFormatException(); // fuerza error si es negativo o cero
+            }
+
+            String nombre = txtProducto.getText();
+            String cliente = txtCliente.getText();
+            Empleado empleado = sesion.empleadoLogueado;
+            if (empleado == null) {
+                JOptionPane.showMessageDialog(this, "No hay empleado logueado.");
+                return;
+            }
+
+            double precio = Double.parseDouble(txtPrecio.getText());
+            double total = cant * precio;
+            int stock = Integer.parseInt(txtStock.getText());
+
+            if (stock >= cant) {
+                model = (DefaultTableModel) tblVenta.getModel();
+                for (int i = 0; i < tblVenta.getRowCount(); i++) {
+                    if (tblVenta.getValueAt(i, 0).equals(nombre)) {
+                        JOptionPane.showMessageDialog(null, "El producto ya está registrado");
+                        return;
+                    }
+                }
+
+                item = item + 1;
+                ArrayList list = new ArrayList();
+                list.add(item);
+                list.add(nombre);
+                list.add(cliente);
+                list.add(empleado);
+                list.add(cant);
+                list.add(precio);
+                list.add(total);
+
+                Object[] o = new Object[6];
+                o[0] = nombre;
+                o[1] = cliente;
+                o[2] = empleado;
+                o[3] = cant;
+                o[4] = precio;
+                o[5] = total;
+
+                model.addRow(o);
+                tblVenta.setModel(model);
+                totalPagar();
+                limpiar();
+                txtProducto.requestFocus();
+            } else {
+                JOptionPane.showMessageDialog(null, "Stock no disponible");
+            }
+
+        } catch (NumberFormatException e) {
+            JOptionPane.showMessageDialog(null, "Ingrese una cantidad válida ");
+            txtCantidad.setText("");
+            txtCantidad.requestFocus();
         }
-    }//GEN-LAST:event_txtCantidadKeyPressed
+
+    } else {
+        JOptionPane.showMessageDialog(null, "Ingrese cantidad");
     }
+   }
+    }//GEN-LAST:event_txtCantidadKeyPressed
+    
     private void txtTotalPagarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtTotalPagarActionPerformed
 
     }//GEN-LAST:event_txtTotalPagarActionPerformed
@@ -752,8 +772,11 @@ private void seleccionarClienteDeLista() {
     }
     }
  public void pdf() {
-    try {
-        File file = new File("src/pdf/vendedor.pdf");
+     try {
+        // Crear nombre único para el PDF con fecha y hora
+        String timestamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
+        File file = new File("src/pdf/venta_" + timestamp + ".pdf");
+
         FileOutputStream archivo = new FileOutputStream(file);
         Document doc = new Document();
         PdfWriter.getInstance(doc, archivo);
@@ -794,7 +817,7 @@ private void seleccionarClienteDeLista() {
         BDGestionarClientes daoCliente = new BDGestionarClientes();
         Cliente cliente = daoCliente.obtenerPorNombre(txtCliente.getText());
         Empleado empleado = sesion.empleadoLogueado;
-        String nombreCliente = cliente.getNombre() + " " + cliente.getApellidos();
+        String nombreCliente = cliente != null ? cliente.getNombre() + " " + cliente.getApellidos() : "";
         String nombreEmpleado = empleado.getNombreEmpleado() + " " + empleado.getApellidos();
         String metodoPago = cmbTipoPago.getSelectedItem().toString();
 
@@ -820,7 +843,6 @@ private void seleccionarClienteDeLista() {
             tabla.addCell(modelo.getValueAt(i, 4).toString()); // Precio
             tabla.addCell(modelo.getValueAt(i, 5).toString()); // Subtotal
         }
-
         doc.add(tabla);
         doc.add(Chunk.NEWLINE);
 
@@ -831,7 +853,9 @@ private void seleccionarClienteDeLista() {
         doc.add(total);
 
         doc.close();
+        archivo.close();
 
+        // Abrir el PDF automáticamente
         if (Desktop.isDesktopSupported()) {
             Desktop.getDesktop().open(file);
         }

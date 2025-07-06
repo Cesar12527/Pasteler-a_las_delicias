@@ -28,6 +28,7 @@ public ArrayList<DetalleVenta> listar() throws Exception {
             dv.cantidad,
             dv.subTotal,
             p.idProducto, p.nombreProducto,
+            cp.idCategoria, cp.nombreCategoria,
             c.idCliente, c.nombreCliente,
             e.idEmpleado, e.nombreEmpleado,
             v.idVenta,
@@ -35,32 +36,45 @@ public ArrayList<DetalleVenta> listar() throws Exception {
             m.idMetodoPago, m.tipoPago
         FROM detalleventa dv
         LEFT JOIN producto p ON dv.idProducto = p.idProducto
+        LEFT JOIN categoriaproducto cp ON p.id_tipo_categoria = cp.idCategoria
         LEFT JOIN venta v ON dv.idVenta = v.idVenta 
         LEFT JOIN cliente c ON v.idCliente = c.idCliente
         LEFT JOIN empleado e ON v.idEmpleado = e.idEmpleado
         LEFT JOIN metodopago m ON v.idMetodoPago = m.idMetodoPago
         ORDER BY v.idVenta;
     """;
+
     try (Connection con = Conexion.conectar();
          PreparedStatement ps = con.prepareStatement(sql);
          ResultSet rs = ps.executeQuery()) {
+
         while (rs.next()) {
             // Producto
             Producto producto = new Producto();
             producto.setId(rs.getInt("idProducto"));
             producto.setNombre(rs.getString("nombreProducto"));
+
+            // Categoría
+            CategoriaProducto categoria = new CategoriaProducto();
+            categoria.setId(rs.getInt("idCategoria"));
+            categoria.setNombrecat(rs.getString("nombreCategoria"));
+            producto.setCategoriaProducto(categoria);
+
             // Cliente
             Cliente cliente = new Cliente();
             cliente.setId(rs.getInt("idCliente"));
             cliente.setNombre(rs.getString("nombreCliente"));
+
             // Empleado
             Empleado empleado = new Empleado();
             empleado.setIdEmpleado(rs.getInt("idEmpleado"));
             empleado.setNombreEmpleado(rs.getString("nombreEmpleado"));
+
             // Método de pago
             MetodoPago metodoPago = new MetodoPago();
             metodoPago.setId(rs.getInt("idMetodoPago"));
             metodoPago.setTipoPago(rs.getString("tipoPago"));
+
             // Venta
             Venta venta = new Venta();
             venta.setIdVenta(rs.getInt("idVenta"));
@@ -68,6 +82,7 @@ public ArrayList<DetalleVenta> listar() throws Exception {
             venta.setEmpleado(empleado);
             venta.setFecha(rs.getString("fecha"));
             venta.setMetodoPago(metodoPago);
+
             // DetalleVenta
             DetalleVenta detalle = new DetalleVenta();
             detalle.setIdDetalleVenta(rs.getInt("idDetalleVenta"));
@@ -75,12 +90,12 @@ public ArrayList<DetalleVenta> listar() throws Exception {
             detalle.setSubTotal(rs.getFloat("subTotal"));
             detalle.setProducto(producto);
             detalle.setVenta(venta);
+
             lista.add(detalle);
         }
     }
     return lista;
 }
-
     @Override
     public int crear(Object object) throws SQLException {
         DetalleVenta d = (DetalleVenta) object;
@@ -152,43 +167,6 @@ public ArrayList<DetalleVenta> listar() throws Exception {
     }
     return lista;
 }
-public ArrayList<DetalleVenta> listarTodos() throws Exception {
-     ArrayList<DetalleVenta> lista = new ArrayList<>();
-    String sql = """
-        SELECT dv.idDetalleVenta, dv.cantidad, dv.subtotal, 
-               p.idProducto, p.nombreProducto,
-               cp.idCategoria, cp.nombreCategoria, cp.descripcionCategoria
-        FROM detalleventa dv
-        JOIN producto p ON dv.idProducto = p.idProducto
-        JOIN categoriaproducto cp ON p.id_tipo_categoria = cp.idCategoria
-    """;
-    try (Connection con = Conexion.conectar();
-         PreparedStatement ps = con.prepareStatement(sql);
-         ResultSet rs = ps.executeQuery()) {
 
-        while (rs.next()) {
-            DetalleVenta det = new DetalleVenta();
-            det.setIdDetalleVenta(rs.getInt("idDetalleVenta"));
-            det.setCantidad(rs.getInt("cantidad"));
-            det.setSubTotal(rs.getFloat("subtotal"));
-
-            
-            Producto prod = new Producto();
-            prod.setId(rs.getInt("idProducto"));
-            prod.setNombre(rs.getString("nombreProducto"));
-            
-CategoriaProducto cat = new CategoriaProducto();
-            cat.setId(rs.getInt("idCategoria"));
-            cat.setNombrecat(rs.getString("nombreCategoria"));
-            cat.setDescripcion(rs.getString("descripcionCategoria"));
-prod.setCategoriaProducto(cat);
-
-            det.setProducto(prod);
-
-            lista.add(det);
-        }
-    }
-    return lista;
-}
 
 }

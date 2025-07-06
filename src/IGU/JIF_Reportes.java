@@ -35,6 +35,7 @@ import java.io.PrintWriter;
 import java.io.RandomAccessFile;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
@@ -198,6 +199,8 @@ public static JIF_Reportes getInstancia(){
         jButton3 = new javax.swing.JButton();
         jButton4 = new javax.swing.JButton();
         jButton5 = new javax.swing.JButton();
+
+        setClosable(true);
 
         txtVentaemp.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyPressed(java.awt.event.KeyEvent evt) {
@@ -450,7 +453,7 @@ public static JIF_Reportes getInstancia(){
                         .addComponent(jButton4)
                         .addGap(18, 18, 18)
                         .addComponent(jButton5)))
-                .addContainerGap(764, Short.MAX_VALUE))
+                .addContainerGap(20, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -719,40 +722,16 @@ public void generarReporteVentasEmpleado(String nombreEmpleado) {
         String nombreArchivoPDF = carpeta + "reporte_" + baseNombre + "_" + fechaHoy + ".pdf";
         File pdfFile = new File(nombreArchivoPDF);
 
-        // Si ya existe, solo lo abrimos
-        if (pdfFile.exists()) {
-            Desktop.getDesktop().open(pdfFile);
-            return;
-        }
-
-        // Verificación si está siendo utilizado por otro programa
-        try (RandomAccessFile raf = new RandomAccessFile(pdfFile, "rw")) {
-            // OK, no está bloqueado
-        } catch (IOException ex) {
-            JOptionPane.showMessageDialog(null,
-                "El archivo PDF ya está abierto en otro programa.\nPor favor, ciérrelo antes de generar un nuevo reporte.",
-                "Archivo en uso", JOptionPane.WARNING_MESSAGE);
-            return;
-        }
-
-        // Generar PDF
         try (FileOutputStream archivo = new FileOutputStream(pdfFile)) {
             Document doc = new Document();
             PdfWriter.getInstance(doc, archivo);
             doc.open();
 
-            Paragraph titulo = new Paragraph("PASTELERÍA LAS DELICIAS E.I.R.L.",
-                    new Font(Font.FontFamily.HELVETICA, 16, Font.BOLD));
-            titulo.setAlignment(Paragraph.ALIGN_CENTER);
-            doc.add(titulo);
-
-            Paragraph sub = new Paragraph("REPORTE DE VENTAS POR EMPLEADO\n\n",
-                    new Font(Font.FontFamily.HELVETICA, 14, Font.BOLD));
-            sub.setAlignment(Paragraph.ALIGN_CENTER);
-            doc.add(sub);
-
-            Paragraph emp = new Paragraph("Empleado: " + empleado.getNombreEmpleado() + " " + empleado.getApellidos());
-            doc.add(emp);
+            doc.add(new Paragraph("PASTELERÍA LAS DELICIAS E.I.R.L.",
+                    new Font(Font.FontFamily.HELVETICA, 16, Font.BOLD)));
+            doc.add(new Paragraph("REPORTE DE VENTAS POR EMPLEADO\n\n",
+                    new Font(Font.FontFamily.HELVETICA, 14, Font.BOLD)));
+            doc.add(new Paragraph("Empleado: " + empleado.getNombreEmpleado() + " " + empleado.getApellidos()));
             doc.add(new Paragraph("Fecha de reporte: " + fechaHoy));
             doc.add(Chunk.NEWLINE);
 
@@ -766,41 +745,39 @@ public void generarReporteVentasEmpleado(String nombreEmpleado) {
             tabla.addCell("Precio");
 
             float sumaTotal = 0f;
+            BDGestionarDetalleVenta daoDetalle = new BDGestionarDetalleVenta();
+
             for (Venta venta : ventas) {
-                BDGestionarDetalleVenta daoDetalle = new BDGestionarDetalleVenta();
                 ArrayList<DetalleVenta> detalles = daoDetalle.obtenerDetallesPorVenta(venta.getIdVenta());
-                boolean primeraFila = true;
                 for (DetalleVenta det : detalles) {
-                    tabla.addCell(primeraFila ? venta.getFecha() : "");
-                    if (primeraFila) {
-                        if (venta.getCliente() != null && venta.getCliente().getNombre() != null) {
-                            tabla.addCell(venta.getCliente().getNombre() + " " + venta.getCliente().getApellidos());
-                        } else {
-                            tabla.addCell("");
-                        }
-                    } else {
-                        tabla.addCell("");
-                    }
+                    tabla.addCell(venta.getFecha());
+
+                    Cliente cli = venta.getCliente();
+                    String nombreCliente = (cli != null && cli.getNombre() != null)
+                            ? cli.getNombre() + " " + cli.getApellidos()
+                            : "Cliente";
+
+                    tabla.addCell(nombreCliente);
                     tabla.addCell(det.getProducto().getNombre());
                     tabla.addCell(String.valueOf(det.getCantidad()));
-                    float precioUnitario = det.getCantidad() > 0 ? det.getSubTotal() / det.getCantidad() : 0;
-                    tabla.addCell(String.format("S/ %.2f", precioUnitario));
-                    primeraFila = false;
+                    tabla.addCell(String.format("S/ %.2f", det.getSubTotal()));
+                    sumaTotal += det.getSubTotal();
                 }
-                sumaTotal += venta.getTotal();
             }
 
             doc.add(tabla);
             doc.add(Chunk.NEWLINE);
+
             Paragraph total = new Paragraph("TOTAL VENDIDO: S/ " + String.format("%.2f", sumaTotal),
                     new Font(Font.FontFamily.HELVETICA, 13, Font.BOLD));
             total.setAlignment(Paragraph.ALIGN_RIGHT);
             doc.add(total);
 
             doc.close();
+            Desktop.getDesktop().open(pdfFile);
+        } catch (FileNotFoundException fnfe) {
+            JOptionPane.showMessageDialog(null, "El archivo está en uso. Ciérralo e intenta nuevamente.", "Archivo en uso", JOptionPane.WARNING_MESSAGE);
         }
-
-        Desktop.getDesktop().open(pdfFile);
 
     } catch (Exception e) {
         JOptionPane.showMessageDialog(null, "Error al generar PDF: " + e.getMessage());
@@ -810,7 +787,7 @@ public void generarReporteVentasEmpleado(String nombreEmpleado) {
 public void generarReporteProductoMasVendido() {
     try {
         BDGestionarDetalleVenta daoDetalle = new BDGestionarDetalleVenta();
-        ArrayList<DetalleVenta> detalles = daoDetalle.listarTodos();
+        ArrayList<DetalleVenta> detalles = daoDetalle.listar();
         if (detalles.isEmpty()) {
             JOptionPane.showMessageDialog(this, "No hay detalles de venta registrados.");
             return;
@@ -819,61 +796,30 @@ public void generarReporteProductoMasVendido() {
         HashMap<String, Integer> contadorProductos = new HashMap<>();
         for (DetalleVenta d : detalles) {
             String nombreProd = d.getProducto().getNombre();
+            if (nombreProd == null || nombreProd.isBlank()) continue;
             int cantidad = d.getCantidad();
             contadorProductos.put(nombreProd, contadorProductos.getOrDefault(nombreProd, 0) + cantidad);
         }
 
-        String productoMasVendido = null;
-        int cantidadMax = 0;
-        for (Map.Entry<String, Integer> entry : contadorProductos.entrySet()) {
-            if (entry.getValue() > cantidadMax) {
-                cantidadMax = entry.getValue();
-                productoMasVendido = entry.getKey();
-            }
-        }
-
-        if (productoMasVendido == null) {
-            JOptionPane.showMessageDialog(this, "No se pudo determinar el producto más vendido.");
+        if (contadorProductos.isEmpty()) {
+            JOptionPane.showMessageDialog(this, "No hay productos válidos para mostrar en el reporte.");
             return;
         }
 
+        String productoMasVendido = Collections.max(contadorProductos.entrySet(), Map.Entry.comparingByValue()).getKey();
+        int cantidadMax = contadorProductos.get(productoMasVendido);
         String carpeta = "src/pdf/";
         String fechaHoy = new SimpleDateFormat("yyyy-MM-dd").format(new Date());
         String nombrePDF = carpeta + "producto_mas_vendido_" + fechaHoy + ".pdf";
         File pdfFile = new File(nombrePDF);
 
-        // Si ya existe, abrirlo y salir (no se genera nada nuevo)
-        if (pdfFile.exists()) {
-            Desktop.getDesktop().open(pdfFile);
-            return;
-        }
-
-        // Verificación si el archivo está abierto por otro programa
-        try (RandomAccessFile raf = new RandomAccessFile(pdfFile, "rw")) {
-            // OK: no está bloqueado
-        } catch (IOException ex) {
-            JOptionPane.showMessageDialog(null,
-                    "El archivo PDF ya está abierto en otro programa.\nPor favor, ciérrelo antes de generar un nuevo reporte.",
-                    "Archivo en uso", JOptionPane.WARNING_MESSAGE);
-            return;
-        }
-
-        // Generar PDF
+        // Manejar error si el archivo ya está abierto o en uso
         try (FileOutputStream archivo = new FileOutputStream(pdfFile)) {
             Document doc = new Document();
             PdfWriter.getInstance(doc, archivo);
             doc.open();
-
-            Paragraph titulo = new Paragraph("PASTELERÍA LAS DELICIAS E.I.R.L.",
-                    new Font(Font.FontFamily.HELVETICA, 16, Font.BOLD));
-            titulo.setAlignment(Element.ALIGN_CENTER);
-            doc.add(titulo);
-
-            Paragraph subtitulo = new Paragraph("REPORTE: PRODUCTO MÁS VENDIDO\n\n",
-                    new Font(Font.FontFamily.HELVETICA, 14, Font.BOLD));
-            subtitulo.setAlignment(Element.ALIGN_CENTER);
-            doc.add(subtitulo);
-
+            doc.add(new Paragraph("PASTELERÍA LAS DELICIAS E.I.R.L.", new Font(Font.FontFamily.HELVETICA, 16, Font.BOLD)));
+            doc.add(new Paragraph("REPORTE: PRODUCTO MÁS VENDIDO\n\n", new Font(Font.FontFamily.HELVETICA, 14, Font.BOLD)));
             doc.add(new Paragraph("Fecha de reporte: " + new SimpleDateFormat("dd/MM/yyyy").format(new Date())));
             doc.add(Chunk.NEWLINE);
 
@@ -886,22 +832,22 @@ public void generarReporteProductoMasVendido() {
             tabla.addCell(productoMasVendido);
             tabla.addCell(String.valueOf(cantidadMax));
             doc.add(tabla);
-
             doc.close();
-        }
 
-        Desktop.getDesktop().open(pdfFile);
+            Desktop.getDesktop().open(pdfFile);
+        } catch (FileNotFoundException fnfe) {
+            JOptionPane.showMessageDialog(this, "El archivo está en uso. Por favor, ciérralo e intenta nuevamente.", "Archivo en uso", JOptionPane.WARNING_MESSAGE);
+        }
 
     } catch (Exception e) {
         JOptionPane.showMessageDialog(this, "Error al generar reporte: " + e.getMessage());
         e.printStackTrace();
     }
 }
-
 public void generarReporteProductoMenosVendido() {
     try {
         BDGestionarDetalleVenta daoDetalle = new BDGestionarDetalleVenta();
-        ArrayList<DetalleVenta> detalles = daoDetalle.listarTodos();
+        ArrayList<DetalleVenta> detalles = daoDetalle.listar();
         if (detalles.isEmpty()) {
             JOptionPane.showMessageDialog(this, "No hay detalles de venta registrados.");
             return;
@@ -910,52 +856,31 @@ public void generarReporteProductoMenosVendido() {
         HashMap<String, Integer> contadorProductos = new HashMap<>();
         for (DetalleVenta d : detalles) {
             String nombreProd = d.getProducto().getNombre();
+            if (nombreProd == null || nombreProd.isBlank()) continue;
             int cantidad = d.getCantidad();
             contadorProductos.put(nombreProd, contadorProductos.getOrDefault(nombreProd, 0) + cantidad);
         }
 
-        String productoMenosVendido = null;
-        int cantidadMin = Integer.MAX_VALUE;
-        for (Map.Entry<String, Integer> entry : contadorProductos.entrySet()) {
-            if (entry.getValue() < cantidadMin) {
-                cantidadMin = entry.getValue();
-                productoMenosVendido = entry.getKey();
-            }
-        }
-
-        if (productoMenosVendido == null) {
-            JOptionPane.showMessageDialog(this, "No se pudo determinar el producto menos vendido.");
+        if (contadorProductos.isEmpty()) {
+            JOptionPane.showMessageDialog(this, "No hay productos válidos para mostrar en el reporte.");
             return;
         }
 
+        String productoMenosVendido = Collections.min(contadorProductos.entrySet(), Map.Entry.comparingByValue()).getKey();
+        int cantidadMin = contadorProductos.get(productoMenosVendido);
         String carpeta = "src/pdf/";
         String fechaHoy = new SimpleDateFormat("yyyy-MM-dd").format(new Date());
         String nombrePDF = carpeta + "producto_menos_vendido_" + fechaHoy + ".pdf";
         File pdfFile = new File(nombrePDF);
 
-        // Si ya existe, solo abrir
-        if (pdfFile.exists()) {
-            Desktop.getDesktop().open(pdfFile);
-            return;
-        }
-
-        // Verificar si el archivo está en uso
-        try (RandomAccessFile raf = new RandomAccessFile(pdfFile, "rw")) {
-            // OK
-        } catch (IOException ex) {
-            JOptionPane.showMessageDialog(null,
-                "El archivo PDF ya está abierto en otro programa.\nPor favor, ciérrelo antes de generar un nuevo reporte.",
-                "Archivo en uso", JOptionPane.WARNING_MESSAGE);
-            return;
-        }
-
         try (FileOutputStream archivo = new FileOutputStream(pdfFile)) {
             Document doc = new Document();
             PdfWriter.getInstance(doc, archivo);
             doc.open();
-
-            doc.add(new Paragraph("PASTELERÍA LAS DELICIAS E.I.R.L.", new Font(Font.FontFamily.HELVETICA, 16, Font.BOLD)));
-            doc.add(new Paragraph("REPORTE: PRODUCTO MENOS VENDIDO\n\n", new Font(Font.FontFamily.HELVETICA, 14, Font.BOLD)));
+            doc.add(new Paragraph("PASTELERÍA LAS DELICIAS E.I.R.L.",
+                    new Font(Font.FontFamily.HELVETICA, 16, Font.BOLD)));
+            doc.add(new Paragraph("REPORTE: PRODUCTO MENOS VENDIDO\n\n",
+                    new Font(Font.FontFamily.HELVETICA, 14, Font.BOLD)));
             doc.add(new Paragraph("Fecha de reporte: " + new SimpleDateFormat("dd/MM/yyyy").format(new Date())));
             doc.add(Chunk.NEWLINE);
 
@@ -967,17 +892,14 @@ public void generarReporteProductoMenosVendido() {
             tabla.addCell("Cantidad Vendida");
             tabla.addCell(productoMenosVendido);
             tabla.addCell(String.valueOf(cantidadMin));
-
             doc.add(tabla);
             doc.close();
+
+            Desktop.getDesktop().open(pdfFile);
+        } catch (FileNotFoundException fnfe) {
+            JOptionPane.showMessageDialog(this, "El archivo está en uso. Ciérralo e intenta nuevamente.", "Archivo en uso", JOptionPane.WARNING_MESSAGE);
         }
 
-        Desktop.getDesktop().open(pdfFile);
-
-    } catch (FileNotFoundException e) {
-        JOptionPane.showMessageDialog(null,
-            "El archivo PDF ya está abierto en otro programa.\nPor favor, ciérrelo antes de generar un nuevo reporte.",
-            "Archivo en uso", JOptionPane.WARNING_MESSAGE);
     } catch (Exception e) {
         JOptionPane.showMessageDialog(this, "Error al generar reporte: " + e.getMessage());
         e.printStackTrace();
@@ -993,18 +915,12 @@ public void generarReporteVentasPorCategoria(String nombreCategoria) {
         }
 
         BDGestionarDetalleVenta daoDetalle = new BDGestionarDetalleVenta();
-        ArrayList<DetalleVenta> detalles = daoDetalle.listarTodos();
-        if (detalles.isEmpty()) {
-            JOptionPane.showMessageDialog(null, "No hay detalles de venta registrados.");
-            return;
-        }
-
+        ArrayList<DetalleVenta> detalles = daoDetalle.listar();
         ArrayList<DetalleVenta> detallesCategoria = new ArrayList<>();
         float montoTotal = 0f;
         for (DetalleVenta d : detalles) {
             Producto p = d.getProducto();
-            if (p.getCategoriaProducto() != null &&
-                p.getCategoriaProducto().getId() == categoria.getId()) {
+            if (p.getCategoriaProducto() != null && p.getCategoriaProducto().getId() == categoria.getId()) {
                 detallesCategoria.add(d);
                 montoTotal += d.getSubTotal();
             }
@@ -1021,31 +937,12 @@ public void generarReporteVentasPorCategoria(String nombreCategoria) {
         String nombreArchivoPDF = carpeta + "reporte_categoria_" + baseNombre + "_" + fechaHoy + ".pdf";
         File pdfFile = new File(nombreArchivoPDF);
 
-        // Si ya existe, solo abrir
-        if (pdfFile.exists()) {
-            Desktop.getDesktop().open(pdfFile);
-            return;
-        }
-
-        // Verificar si está abierto en otro programa
-        try (RandomAccessFile raf = new RandomAccessFile(pdfFile, "rw")) {
-            // OK
-        } catch (IOException ex) {
-            JOptionPane.showMessageDialog(null,
-                "El archivo PDF ya está abierto en otro programa.\nPor favor, ciérrelo antes de generar un nuevo reporte.",
-                "Archivo en uso", JOptionPane.WARNING_MESSAGE);
-            return;
-        }
-
         try (FileOutputStream archivo = new FileOutputStream(pdfFile)) {
             Document doc = new Document();
             PdfWriter.getInstance(doc, archivo);
             doc.open();
-
-            doc.add(new Paragraph("PASTELERÍA LAS DELICIAS E.I.R.L.",
-                    new Font(Font.FontFamily.HELVETICA, 16, Font.BOLD)));
-            doc.add(new Paragraph("REPORTE DE VENTAS POR CATEGORÍA\n\n",
-                    new Font(Font.FontFamily.HELVETICA, 14, Font.BOLD)));
+            doc.add(new Paragraph("PASTELERÍA LAS DELICIAS E.I.R.L.", new Font(Font.FontFamily.HELVETICA, 16, Font.BOLD)));
+            doc.add(new Paragraph("REPORTE DE VENTAS POR CATEGORÍA\n\n", new Font(Font.FontFamily.HELVETICA, 14, Font.BOLD)));
             doc.add(new Paragraph("Categoría: " + categoria.getNombrecat()));
             doc.add(new Paragraph("Fecha de reporte: " + new SimpleDateFormat("dd/MM/yyyy").format(new Date())));
             doc.add(Chunk.NEWLINE);
@@ -1065,22 +962,23 @@ public void generarReporteVentasPorCategoria(String nombreCategoria) {
 
             doc.add(tabla);
             doc.add(Chunk.NEWLINE);
-
             Paragraph total = new Paragraph("TOTAL VENDIDO EN CATEGORÍA: S/ " + String.format("%.2f", montoTotal),
                     new Font(Font.FontFamily.HELVETICA, 13, Font.BOLD));
             total.setAlignment(Paragraph.ALIGN_RIGHT);
             doc.add(total);
-
             doc.close();
-        }
 
-        Desktop.getDesktop().open(pdfFile);
+            Desktop.getDesktop().open(pdfFile);
+        } catch (FileNotFoundException fnfe) {
+            JOptionPane.showMessageDialog(null, "El archivo está en uso. Ciérralo e intenta nuevamente.", "Archivo en uso", JOptionPane.WARNING_MESSAGE);
+        }
 
     } catch (Exception e) {
         JOptionPane.showMessageDialog(null, "Error al generar el reporte: " + e.getMessage());
         e.printStackTrace();
     }
 }
+
 public void generarReporteStockProductos() {
     try {
         BDGestionarProductos daoProd = new BDGestionarProductos();
@@ -1095,27 +993,10 @@ public void generarReporteStockProductos() {
         String nombreArchivoPDF = carpeta + "reporte_stock_productos_" + fechaHoy + ".pdf";
         File pdfFile = new File(nombreArchivoPDF);
 
-        // Si ya existe, solo abrir
-        if (pdfFile.exists()) {
-            Desktop.getDesktop().open(pdfFile);
-            return;
-        }
-
-        // Verificar si está abierto en otro programa
-        try (RandomAccessFile raf = new RandomAccessFile(pdfFile, "rw")) {
-            // Acceso válido
-        } catch (IOException ex) {
-            JOptionPane.showMessageDialog(null,
-                "El archivo PDF ya está abierto en otro programa.\nPor favor, ciérrelo antes de generar un nuevo reporte.",
-                "Archivo en uso", JOptionPane.WARNING_MESSAGE);
-            return;
-        }
-
         try (FileOutputStream archivo = new FileOutputStream(pdfFile)) {
             Document doc = new Document();
             PdfWriter.getInstance(doc, archivo);
             doc.open();
-
             doc.add(new Paragraph("PASTELERÍA LAS DELICIAS E.I.R.L.", new Font(Font.FontFamily.HELVETICA, 16, Font.BOLD)));
             doc.add(new Paragraph("REPORTE DE STOCK ACTUAL DE PRODUCTOS\n\n", new Font(Font.FontFamily.HELVETICA, 14, Font.BOLD)));
             doc.add(new Paragraph("Fecha de reporte: " + new SimpleDateFormat("dd/MM/yyyy").format(new Date())));
@@ -1130,13 +1011,11 @@ public void generarReporteStockProductos() {
             tabla.addCell("Precio (S/.)");
 
             ArrayList<Producto> productosPeligro = new ArrayList<>();
-
             for (Producto p : productos) {
                 tabla.addCell(p.getNombre());
                 tabla.addCell(p.getCategoriaProducto().getNombrecat());
                 tabla.addCell(String.valueOf(p.getStock()));
                 tabla.addCell(String.format("S/ %.2f", p.getPrecioUnitario()));
-
                 if (p.getStock() <= 5) {
                     productosPeligro.add(p);
                 }
@@ -1144,7 +1023,6 @@ public void generarReporteStockProductos() {
 
             doc.add(tabla);
 
-            // Productos con bajo stock
             if (!productosPeligro.isEmpty()) {
                 doc.add(Chunk.NEWLINE);
                 doc.add(new Paragraph("PRODUCTOS POR AGOTARSE", new Font(Font.FontFamily.HELVETICA, 13, Font.BOLD, BaseColor.RED)));
@@ -1169,19 +1047,14 @@ public void generarReporteStockProductos() {
             }
 
             doc.close();
+            Desktop.getDesktop().open(pdfFile);
+        } catch (FileNotFoundException fnfe) {
+            JOptionPane.showMessageDialog(null, "El archivo está en uso. Ciérralo e intenta nuevamente.", "Archivo en uso", JOptionPane.WARNING_MESSAGE);
         }
 
-        Desktop.getDesktop().open(pdfFile);
-
-    } catch (FileNotFoundException e) {
-        JOptionPane.showMessageDialog(null,
-            "El archivo PDF ya está abierto en otro programa.\nPor favor, ciérrelo antes de generar un nuevo reporte.",
-            "Archivo en uso", JOptionPane.WARNING_MESSAGE);
     } catch (Exception e) {
         JOptionPane.showMessageDialog(null, "Error al generar reporte: " + e.getMessage());
         e.printStackTrace();
     }
 }
-
-
 }

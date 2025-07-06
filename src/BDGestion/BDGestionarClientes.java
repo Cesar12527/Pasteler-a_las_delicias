@@ -140,31 +140,7 @@ public void eliminar(int id) throws Exception {
         return null;
     }
      
-    public Object obtenerCliente(String nombre) throws Exception {
-        Cliente objC = new Cliente();
-        ResultSet rs = null;
-        PreparedStatement ps = null;
-        try {
-            this.con = Conexion.conectar();
-            String sql = "SELECT * FROM cliente WHERE nombreCliente= ?";
-            ps = this.con.prepareStatement(sql);
-            ps.setString(1, nombre);
-            rs = ps.executeQuery();   
-            if(rs.next()) {                
-                objC.setId(rs.getInt("idCliente"));
-                objC.setNombre(rs.getString("nombreCliente"));
-                objC.setApellidos(rs.getString("apellidos"));
-                objC.setDni(rs.getString("documento"));
-                objC.setTelefono(rs.getString("telefono"));     
-            }else{
-                objC = null;        
-            }
-        } catch (Exception e) {
-            throw e;
-        }
-        return objC;
-       
-    }
+  
     public Cliente obtenerPorNombre(String nombre) throws Exception {
     Cliente c = null;
     String sql = "SELECT * FROM cliente WHERE nombreCliente = ?";
@@ -177,8 +153,14 @@ public void eliminar(int id) throws Exception {
             c.setId(rs.getInt("idCliente")); // o rs.getInt("id_cliente")
             c.setNombre(rs.getString("nombreCliente"));
              c.setApellidos(rs.getString("apellidos"));
+             c.setDni(rs.getString("documento"));
+             c.setTelefono(rs.getString("telefono"));    
+        }else{
+                c = null;        
+            }
+    }catch (Exception e) {
+            throw e;
         }
-    }
     return c;
 }
 

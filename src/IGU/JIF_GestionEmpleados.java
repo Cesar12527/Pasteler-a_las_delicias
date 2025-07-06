@@ -330,7 +330,7 @@ public static JIF_GestionEmpleados getInstancia(){
         Empleado objC = mte.getEmpleado(indexElemSelecc);
         try {
             BDGestionEmpleados bdCli = new BDGestionEmpleados();
-            objC = (Empleado) bdCli.obtener(objC.getIdEmpleado());
+            objC = (Empleado) bdCli.obtenerPorNombre(objC.getNombreEmpleado());
             
             this.txtNombre.setText( objC.getNombreEmpleado());
             this.txtApellido.setText( objC.getApellidos());

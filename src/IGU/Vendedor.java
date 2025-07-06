@@ -29,6 +29,8 @@ import java.awt.Desktop;
 import java.awt.event.KeyEvent;
 import java.io.File;
 import java.io.FileOutputStream;
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -751,7 +753,8 @@ txtCliente.addKeyListener(new java.awt.event.KeyAdapter() {
     }//GEN-LAST:event_txtProductoKeyPressed
 
     private void txtCantidadKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtCantidadKeyPressed
-   if (evt.getKeyCode() == KeyEvent.VK_ENTER) {
+
+        if (evt.getKeyCode() == KeyEvent.VK_ENTER) {
     String textoCantidad = txtCantidad.getText().trim();
 
     if (!textoCantidad.isEmpty()) {
@@ -769,8 +772,9 @@ txtCliente.addKeyListener(new java.awt.event.KeyAdapter() {
                 return;
             }
 
-            double precio = Double.parseDouble(txtPrecio.getText());
-            double total = cant * precio;
+            BigDecimal precio = new BigDecimal(txtPrecio.getText());
+BigDecimal cantidad = new BigDecimal(cant);
+BigDecimal total = precio.multiply(cantidad).setScale(2, RoundingMode.HALF_UP);
             int stock = Integer.parseInt(txtStock.getText());
 
             if (stock >= cant) {
@@ -897,6 +901,7 @@ venta.setEmpleado(empleado);
 
         // Paso 4: Confirmación
          pdf();
+         cargarTablaVenta();
         limpiarTabla();
         limpiaralvender();
         txtTotalPagar.setText("0.00");
@@ -958,7 +963,7 @@ venta.setEmpleado(empleado);
             try {
                 Cliente objC = mtc.getCliente(indexElemSelecc);
                 BDGestionarClientes bdCli = new BDGestionarClientes();
-                objC = (Cliente) bdCli.obtenerCliente(objC.getNombre());
+                objC = (Cliente) bdCli.obtenerPorNombre(objC.getNombre());
 
                 this.txtNombres.setText( objC.getNombre() );
                 this.txtApellidos.setText(objC.getApellidos());
@@ -1104,14 +1109,13 @@ venta.setEmpleado(empleado);
     // End of variables declaration//GEN-END:variables
 
 private void totalPagar(){
-TotalPagar = 0.00;
-int numFila = tblVenta.getRowCount();
+    BigDecimal totalPagar = BigDecimal.ZERO;
+    int numFila = tblVenta.getRowCount();
     for (int i = 0; i < numFila; i++) {
-        double cal= Double.parseDouble(String.valueOf(tblVenta.getModel().getValueAt(i, 5)));
-        TotalPagar = TotalPagar + cal;
+        BigDecimal subtotal = new BigDecimal(tblVenta.getModel().getValueAt(i, 5).toString());
+        totalPagar = totalPagar.add(subtotal);
     }
-    txtTotalPagar.setText(String.format("%.2f",TotalPagar));
-
+    txtTotalPagar.setText(totalPagar.setScale(2, RoundingMode.HALF_UP).toString());
 }
 private void limpiar(){
    this.txtProducto.setText("");
@@ -1120,8 +1124,9 @@ private void limpiar(){
     this.txtStock.setText("");
 }
 private void limpiaralvender(){
-   
+    this.cmbTipoPago.setSelectedIndex(-1);
    this.txtCliente.setText("");
+    
 }
 
 
@@ -1143,11 +1148,11 @@ private void limpiarTabla() {
 }
 private void cargarComboMetodoPago() {
     
-    try {
+     try {
         BDGestionMetodoPago bd_GCP = new BDGestionMetodoPago();
         ArrayList arrTD = bd_GCP.listar();
         this.mctp.setListadoRol(arrTD);
-         cmbTipoPago.setModel(mctp);
+        
     } catch (Exception e) {
         JOptionPane.showMessageDialog(
                     this, 

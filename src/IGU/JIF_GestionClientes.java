@@ -265,7 +265,7 @@ public class JIF_GestionClientes extends javax.swing.JInternalFrame {
         try {
             Cliente objC = mtc.getCliente(indexElemSelecc);
             BDGestionarClientes bdCli = new BDGestionarClientes();
-            objC = (Cliente) bdCli.obtenerCliente(objC.getNombre());
+            objC = (Cliente) bdCli.obtenerPorNombre(objC.getNombre());
             
             this.txtNombres.setText( objC.getNombre() );
             this.txtApellidos.setText(objC.getApellidos());

@@ -130,45 +130,7 @@ public class BDGestionEmpleados implements ICRUD {
 
     @Override
     public Object obtener(int id) throws Exception {
-        Empleado emp = null;
-
-        String sql = """
-    SELECT e.idEmpleado, e.nombreEmpleado, e.apellidos, e.dni, e.telefono, e.correo, e.estado,
-           u.id AS id, u.usuario, u.clave
-    FROM empleado e
-    INNER JOIN usuario u ON e.id_usuario = u.id
-    WHERE e.idEmpleado = ?
-""";
-
-        try (
-            Connection con = Conexion.conectar();
-            PreparedStatement ps = con.prepareStatement(sql);
-        ) {
-            ps.setInt(1, id);
-
-            try (ResultSet rs = ps.executeQuery()) {
-                if (rs.next()) {
-    Usuario u = new Usuario();
-    u.setId(rs.getInt("id"));
-    u.setUsuario(rs.getString("usuario"));
-    u.setClaveHash(rs.getString("clave"));
-
-    emp = new Empleado();
-    emp.setIdEmpleado(rs.getInt("idEmpleado"));
-    emp.setNombreEmpleado(rs.getString("nombreEmpleado"));
-    emp.setApellidos(rs.getString("apellidos"));
-    emp.setDni(rs.getString("dni"));
-    emp.setTelefono(rs.getString("telefono"));
-    emp.setCorreo(rs.getString("correo"));
-    emp.setEstado(rs.getString("estado"));
-    emp.setUsuario(u);
-            }
-            }
-        } catch (Exception e) {
-            throw e;
-        }
-
-        return emp;
+     return null;
     }
     public Empleado obtenerPorNombre(String nombre) throws Exception {
      Empleado emp = null;

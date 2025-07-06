@@ -20,7 +20,7 @@ public class BDGestionarVenta implements ICRUD {
              ResultSet rs = ps.executeQuery()) {
             while (rs.next()) {
                 Venta v = new Venta();
-                v.setIdVenta(rs.getInt("id"));
+                v.setIdVenta(rs.getInt("idVenta"));
                 v.setTotal(rs.getFloat("total"));
                 Cliente c = new Cliente();
                 c.setId(rs.getInt("idCliente"));
@@ -120,4 +120,38 @@ public class BDGestionarVenta implements ICRUD {
         }
         return v;
     }
+    public ArrayList<Venta> listarPorEmpleado(int idEmpleado) throws Exception {
+    ArrayList<Venta> lista = new ArrayList<>();
+    String sql = """
+        SELECT v.idVenta, v.fecha, v.total,
+               c.idCliente AS idCliente, c.nombreCliente AS nombreCliente, c.apellidos AS apellidos
+        FROM venta v
+        LEFT JOIN cliente c ON v.idCliente = c.idCliente
+        WHERE v.idEmpleado = ?
+        """;
+
+    try (Connection con = Conexion.conectar();
+         PreparedStatement ps = con.prepareStatement(sql)) {
+        ps.setInt(1, idEmpleado);
+        ResultSet rs = ps.executeQuery();
+
+        while (rs.next()) {
+            Venta v = new Venta();
+            v.setIdVenta(rs.getInt("idVenta"));
+            v.setFecha(rs.getString("fecha"));
+            v.setTotal(rs.getFloat("total"));
+
+            Cliente c = new Cliente();
+            c.setId(rs.getInt("idCliente"));
+            c.setNombre(rs.getString("nombreCliente"));
+            c.setApellidos(rs.getString("apellidos"));
+            v.setCliente(c);
+
+            lista.add(v);
+        }
+    } catch (Exception e) {
+        throw new Exception("Error al listar ventas por empleado: " + e.getMessage());
+    }
+    return lista;
+}
 }

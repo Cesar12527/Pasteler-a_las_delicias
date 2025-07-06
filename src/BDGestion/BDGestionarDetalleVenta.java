@@ -2,6 +2,7 @@ package BDGestion;
 
 import BaseDatos.Conexion;
 import BaseDatos.ICRUD;
+import Entidades.CategoriaProducto;
 import Entidades.Cliente;
 import Entidades.DetalleVenta;
 import Entidades.Empleado;
@@ -127,4 +128,67 @@ public ArrayList<DetalleVenta> listar() throws Exception {
         }
         return d;
     }
+  public ArrayList<DetalleVenta> obtenerDetallesPorVenta(int idVenta) throws Exception {
+    ArrayList<DetalleVenta> lista = new ArrayList<>();
+    String sql = """
+        SELECT dv.cantidad,dv.subTotal, p.nombreProducto
+        FROM detalleventa dv
+        INNER JOIN producto p ON dv.idProducto = p.idProducto
+        WHERE dv.idVenta = ?
+        """;
+    try (Connection con = Conexion.conectar();
+         PreparedStatement ps = con.prepareStatement(sql)) {
+        ps.setInt(1, idVenta);
+        ResultSet rs = ps.executeQuery();
+        while (rs.next()) {
+            DetalleVenta dv = new DetalleVenta();
+            dv.setCantidad(rs.getInt("cantidad"));
+            dv.setSubTotal(rs.getFloat("subTotal"));
+            Producto p = new Producto();
+            p.setNombre(rs.getString("nombreProducto"));
+            dv.setProducto(p);
+            lista.add(dv);
+        }
+    }
+    return lista;
+}
+public ArrayList<DetalleVenta> listarTodos() throws Exception {
+     ArrayList<DetalleVenta> lista = new ArrayList<>();
+    String sql = """
+        SELECT dv.idDetalleVenta, dv.cantidad, dv.subtotal, 
+               p.idProducto, p.nombreProducto,
+               cp.idCategoria, cp.nombreCategoria, cp.descripcionCategoria
+        FROM detalleventa dv
+        JOIN producto p ON dv.idProducto = p.idProducto
+        JOIN categoriaproducto cp ON p.id_tipo_categoria = cp.idCategoria
+    """;
+    try (Connection con = Conexion.conectar();
+         PreparedStatement ps = con.prepareStatement(sql);
+         ResultSet rs = ps.executeQuery()) {
+
+        while (rs.next()) {
+            DetalleVenta det = new DetalleVenta();
+            det.setIdDetalleVenta(rs.getInt("idDetalleVenta"));
+            det.setCantidad(rs.getInt("cantidad"));
+            det.setSubTotal(rs.getFloat("subtotal"));
+
+            
+            Producto prod = new Producto();
+            prod.setId(rs.getInt("idProducto"));
+            prod.setNombre(rs.getString("nombreProducto"));
+            
+CategoriaProducto cat = new CategoriaProducto();
+            cat.setId(rs.getInt("idCategoria"));
+            cat.setNombrecat(rs.getString("nombreCategoria"));
+            cat.setDescripcion(rs.getString("descripcionCategoria"));
+prod.setCategoriaProducto(cat);
+
+            det.setProducto(prod);
+
+            lista.add(det);
+        }
+    }
+    return lista;
+}
+
 }

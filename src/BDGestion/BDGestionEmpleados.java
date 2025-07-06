@@ -200,5 +200,4 @@ public class BDGestionEmpleados implements ICRUD {
 
     return emp;
 }
-
 }

@@ -114,5 +114,27 @@ public class BDComboboxCategoriaProducto implements ICRUD{
         }
         return objCP;
     }
-    
+     public CategoriaProducto obtenerpornombre(String nombre) throws Exception {
+        CategoriaProducto objCP = null;
+        String sql = "SELECT * FROM categoriaproducto WHERE nombreCategoria= ?";
+
+        try(
+            Connection con = Conexion.conectar();
+            PreparedStatement ps = con.prepareStatement(sql)
+            ){
+            ps.setString(1, nombre);
+            try (ResultSet rs = ps.executeQuery()
+                 ){
+                if(rs.next()) {
+                    objCP = new CategoriaProducto();
+                    objCP.setId(rs.getInt("idCategoria"));
+                    objCP.setNombrecat(rs.getString("nombreCategoria"));
+                    objCP.setDescripcion(rs.getString("descripcionCategoria"));    
+                }
+            }
+        } catch (Exception e) {
+            throw e;
+        }
+        return objCP;
+    }
 }

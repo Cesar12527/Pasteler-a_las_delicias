@@ -31,6 +31,7 @@ public class MDI_MenuPrincipal extends javax.swing.JFrame {
         jM_Clientes = new javax.swing.JMenu();
         MI_Clientes = new javax.swing.JMenuItem();
         jM_Reportes = new javax.swing.JMenu();
+        MI_Reportes = new javax.swing.JMenuItem();
         jM_CerrarSesion = new javax.swing.JMenu();
         MI_CerrarSesion = new javax.swing.JMenuItem();
         MI_Salir = new javax.swing.JMenuItem();
@@ -132,6 +133,16 @@ public class MDI_MenuPrincipal extends javax.swing.JFrame {
         menuBar.add(jM_Clientes);
 
         jM_Reportes.setText("Reportes");
+
+        MI_Reportes.setMnemonic('p');
+        MI_Reportes.setText("Reportes");
+        MI_Reportes.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                MI_ReportesActionPerformed(evt);
+            }
+        });
+        jM_Reportes.add(MI_Reportes);
+
         menuBar.add(jM_Reportes);
 
         jM_CerrarSesion.setMnemonic('f');
@@ -163,7 +174,7 @@ public class MDI_MenuPrincipal extends javax.swing.JFrame {
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(desktopPane, javax.swing.GroupLayout.DEFAULT_SIZE, 997, Short.MAX_VALUE)
+            .addComponent(desktopPane, javax.swing.GroupLayout.DEFAULT_SIZE, 1124, Short.MAX_VALUE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -322,6 +333,21 @@ public class MDI_MenuPrincipal extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_MI_TablaVentasActionPerformed
 
+    private void MI_ReportesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_MI_ReportesActionPerformed
+        JIF_Reportes Reportes = JIF_Reportes.getInstancia();
+        if(!Reportes.isVisible()){
+        desktopPane.add(Reportes);
+        Reportes.setVisible(true);
+        } else {
+            try{
+                Reportes.setSelected(true);
+            Reportes.toFront();
+            }catch (Exception e){
+                System.out.println("error:"+e.getMessage());
+            }
+        }
+    }//GEN-LAST:event_MI_ReportesActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -335,6 +361,7 @@ public class MDI_MenuPrincipal extends javax.swing.JFrame {
     private javax.swing.JMenuItem MI_MetodoPago;
     private javax.swing.JMenuItem MI_Productos;
     private javax.swing.JMenuItem MI_RealizarVenta;
+    private javax.swing.JMenuItem MI_Reportes;
     private javax.swing.JMenuItem MI_Roles;
     private javax.swing.JMenuItem MI_Salir;
     private javax.swing.JMenuItem MI_TablaVentas;

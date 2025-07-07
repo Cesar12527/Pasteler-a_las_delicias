@@ -2,12 +2,14 @@
 package IGU;
 
 
+import java.awt.Color;
 import javax.swing.JOptionPane;
 
 public class MDI_MenuPrincipal extends javax.swing.JFrame {
     
     public MDI_MenuPrincipal() {
         initComponents();
+        desktopPane.setBackground(Color.WHITE);
         this.setLocationRelativeTo(null);
     }
 
@@ -33,13 +35,16 @@ public class MDI_MenuPrincipal extends javax.swing.JFrame {
         jM_Reportes = new javax.swing.JMenu();
         MI_Reportes = new javax.swing.JMenuItem();
         jM_CerrarSesion = new javax.swing.JMenu();
-        MI_CerrarSesion = new javax.swing.JMenuItem();
         MI_Salir = new javax.swing.JMenuItem();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
+        desktopPane.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(102, 51, 0), 2));
         desktopPane.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
 
+        menuBar.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(102, 51, 0), 2));
+
+        jM_Productos.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(51, 0, 0)));
         jM_Productos.setMnemonic('e');
         jM_Productos.setText("Productos");
 
@@ -71,6 +76,7 @@ public class MDI_MenuPrincipal extends javax.swing.JFrame {
 
         menuBar.add(jM_Productos);
 
+        jM_Ventas.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(51, 0, 0)));
         jM_Ventas.setText("Ventas");
 
         MI_RealizarVenta.setText("Realizar Venta");
@@ -99,6 +105,7 @@ public class MDI_MenuPrincipal extends javax.swing.JFrame {
 
         menuBar.add(jM_Ventas);
 
+        jM_Caja1.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(51, 0, 0)));
         jM_Caja1.setText("Empleados");
 
         MI_Empleados.setText("Empleados");
@@ -119,6 +126,7 @@ public class MDI_MenuPrincipal extends javax.swing.JFrame {
 
         menuBar.add(jM_Caja1);
 
+        jM_Clientes.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(51, 0, 0)));
         jM_Clientes.setText("Clientes");
 
         MI_Clientes.setMnemonic('p');
@@ -132,6 +140,7 @@ public class MDI_MenuPrincipal extends javax.swing.JFrame {
 
         menuBar.add(jM_Clientes);
 
+        jM_Reportes.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(51, 0, 0)));
         jM_Reportes.setText("Reportes");
 
         MI_Reportes.setMnemonic('p');
@@ -145,17 +154,9 @@ public class MDI_MenuPrincipal extends javax.swing.JFrame {
 
         menuBar.add(jM_Reportes);
 
+        jM_CerrarSesion.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(51, 0, 0)));
         jM_CerrarSesion.setMnemonic('f');
-        jM_CerrarSesion.setText("Cerrar sesion");
-
-        MI_CerrarSesion.setMnemonic('s');
-        MI_CerrarSesion.setText("Cerrar Sesion");
-        MI_CerrarSesion.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                MI_CerrarSesionActionPerformed(evt);
-            }
-        });
-        jM_CerrarSesion.add(MI_CerrarSesion);
+        jM_CerrarSesion.setText("Salir");
 
         MI_Salir.setMnemonic('x');
         MI_Salir.setText("Salir");
@@ -174,11 +175,15 @@ public class MDI_MenuPrincipal extends javax.swing.JFrame {
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(desktopPane, javax.swing.GroupLayout.DEFAULT_SIZE, 1124, Short.MAX_VALUE)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                .addComponent(desktopPane, javax.swing.GroupLayout.PREFERRED_SIZE, 1054, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(0, 0, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(desktopPane, javax.swing.GroupLayout.DEFAULT_SIZE, 613, Short.MAX_VALUE)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                .addGap(0, 0, Short.MAX_VALUE)
+                .addComponent(desktopPane, javax.swing.GroupLayout.PREFERRED_SIZE, 577, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
 
         pack();
@@ -187,14 +192,6 @@ public class MDI_MenuPrincipal extends javax.swing.JFrame {
     private void MI_SalirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_MI_SalirActionPerformed
         System.exit(0);
     }//GEN-LAST:event_MI_SalirActionPerformed
-
-    private void MI_CerrarSesionActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_MI_CerrarSesionActionPerformed
-       int opc = JOptionPane.showConfirmDialog(null,"¿Desea cerrar sesión?","Confirmar salida", 
-                  JOptionPane.YES_NO_OPTION , JOptionPane.QUESTION_MESSAGE);
-        if(opc == JOptionPane.YES_OPTION){
-            System.exit(0);
-        }
-    }//GEN-LAST:event_MI_CerrarSesionActionPerformed
 
     private void MI_ProductosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_MI_ProductosActionPerformed
           JIF_GestionProductos Productos = JIF_GestionProductos.getInstancia();
@@ -355,7 +352,6 @@ public class MDI_MenuPrincipal extends javax.swing.JFrame {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JMenuItem MI_ActivosFijos;
     private javax.swing.JMenuItem MI_CategoriaProducto;
-    private javax.swing.JMenuItem MI_CerrarSesion;
     private javax.swing.JMenuItem MI_Clientes;
     private javax.swing.JMenuItem MI_Empleados;
     private javax.swing.JMenuItem MI_MetodoPago;

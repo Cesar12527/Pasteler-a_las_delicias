@@ -146,6 +146,8 @@ public class BDGestionEmpleados implements ICRUD {
                 emp.setIdEmpleado(rs.getInt("idEmpleado"));
                 emp.setNombreEmpleado(rs.getString("nombreEmpleado"));
                 emp.setApellidos(rs.getString("apellidos"));
+                emp.setCorreo(rs.getString("correo"));
+                emp.setEstado(rs.getString("estado"));
                 emp.setDni(rs.getString("dni"));
                 emp.setTelefono(rs.getString("telefono"));
 

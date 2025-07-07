@@ -17,22 +17,14 @@ import com.itextpdf.text.Chunk;
 import com.itextpdf.text.Document;
 import com.itextpdf.text.Element;
 import com.itextpdf.text.Font;
-import com.itextpdf.text.FontFactory;
 import com.itextpdf.text.Paragraph;
 import com.itextpdf.text.pdf.PdfPTable;
 import com.itextpdf.text.pdf.PdfWriter;
 import java.awt.Desktop;
 import java.awt.event.KeyEvent;
-import java.io.BufferedReader;
-import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
-import java.io.FileReader;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.io.PrintWriter;
-import java.io.RandomAccessFile;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -710,23 +702,25 @@ public void generarReporteVentasEmpleado(String nombreEmpleado) {
         Empleado empleado = daoEmp.obtenerPorNombre(nombreEmpleado);
         BDGestionarVenta daoVenta = new BDGestionarVenta();
         ArrayList<Venta> ventas = daoVenta.listarPorEmpleado(empleado.getIdEmpleado());
-
         if (ventas.isEmpty()) {
             JOptionPane.showMessageDialog(null, "El empleado no tiene ventas registradas.");
             return;
         }
 
-        String baseNombre = empleado.getNombreEmpleado().replaceAll("\\s+", "_").toLowerCase();
-        String carpeta = "src/pdf/";
-        String fechaHoy = new SimpleDateFormat("yyyy-MM-dd").format(new Date());
-        String nombreArchivoPDF = carpeta + "reporte_" + baseNombre + "_" + fechaHoy + ".pdf";
-        File pdfFile = new File(nombreArchivoPDF);
+        String userHome = System.getProperty("user.home");
+        String carpetaDescargas = new File(userHome + File.separator + "Descargas").exists()
+            ? userHome + File.separator + "Descargas" + File.separator
+            : userHome + File.separator + "Downloads" + File.separator;
 
+        String baseNombre = empleado.getNombreEmpleado().replaceAll("\\s+", "_").toLowerCase();
+        String fechaHoy = new SimpleDateFormat("yyyy-MM-dd").format(new Date());
+        String nombreArchivoPDF = carpetaDescargas + "reporte_" + baseNombre + "_" + fechaHoy + ".pdf";
+
+        File pdfFile = new File(nombreArchivoPDF);
         try (FileOutputStream archivo = new FileOutputStream(pdfFile)) {
             Document doc = new Document();
             PdfWriter.getInstance(doc, archivo);
             doc.open();
-
             doc.add(new Paragraph("PASTELERÍA LAS DELICIAS E.I.R.L.",
                     new Font(Font.FontFamily.HELVETICA, 16, Font.BOLD)));
             doc.add(new Paragraph("REPORTE DE VENTAS POR EMPLEADO\n\n",
@@ -746,17 +740,14 @@ public void generarReporteVentasEmpleado(String nombreEmpleado) {
 
             float sumaTotal = 0f;
             BDGestionarDetalleVenta daoDetalle = new BDGestionarDetalleVenta();
-
             for (Venta venta : ventas) {
                 ArrayList<DetalleVenta> detalles = daoDetalle.obtenerDetallesPorVenta(venta.getIdVenta());
                 for (DetalleVenta det : detalles) {
                     tabla.addCell(venta.getFecha());
-
                     Cliente cli = venta.getCliente();
                     String nombreCliente = (cli != null && cli.getNombre() != null)
                             ? cli.getNombre() + " " + cli.getApellidos()
                             : "Cliente";
-
                     tabla.addCell(nombreCliente);
                     tabla.addCell(det.getProducto().getNombre());
                     tabla.addCell(String.valueOf(det.getCantidad()));
@@ -767,18 +758,15 @@ public void generarReporteVentasEmpleado(String nombreEmpleado) {
 
             doc.add(tabla);
             doc.add(Chunk.NEWLINE);
-
             Paragraph total = new Paragraph("TOTAL VENDIDO: S/ " + String.format("%.2f", sumaTotal),
                     new Font(Font.FontFamily.HELVETICA, 13, Font.BOLD));
             total.setAlignment(Paragraph.ALIGN_RIGHT);
             doc.add(total);
-
             doc.close();
             Desktop.getDesktop().open(pdfFile);
         } catch (FileNotFoundException fnfe) {
             JOptionPane.showMessageDialog(null, "El archivo está en uso. Ciérralo e intenta nuevamente.", "Archivo en uso", JOptionPane.WARNING_MESSAGE);
         }
-
     } catch (Exception e) {
         JOptionPane.showMessageDialog(null, "Error al generar PDF: " + e.getMessage());
         e.printStackTrace();
@@ -792,7 +780,6 @@ public void generarReporteProductoMasVendido() {
             JOptionPane.showMessageDialog(this, "No hay detalles de venta registrados.");
             return;
         }
-
         HashMap<String, Integer> contadorProductos = new HashMap<>();
         for (DetalleVenta d : detalles) {
             String nombreProd = d.getProducto().getNombre();
@@ -800,20 +787,18 @@ public void generarReporteProductoMasVendido() {
             int cantidad = d.getCantidad();
             contadorProductos.put(nombreProd, contadorProductos.getOrDefault(nombreProd, 0) + cantidad);
         }
-
         if (contadorProductos.isEmpty()) {
             JOptionPane.showMessageDialog(this, "No hay productos válidos para mostrar en el reporte.");
             return;
         }
-
         String productoMasVendido = Collections.max(contadorProductos.entrySet(), Map.Entry.comparingByValue()).getKey();
         int cantidadMax = contadorProductos.get(productoMasVendido);
-        String carpeta = "src/pdf/";
+
+        String carpeta = System.getProperty("user.home") + File.separator + "Downloads" + File.separator;
         String fechaHoy = new SimpleDateFormat("yyyy-MM-dd").format(new Date());
         String nombrePDF = carpeta + "producto_mas_vendido_" + fechaHoy + ".pdf";
         File pdfFile = new File(nombrePDF);
 
-        // Manejar error si el archivo ya está abierto o en uso
         try (FileOutputStream archivo = new FileOutputStream(pdfFile)) {
             Document doc = new Document();
             PdfWriter.getInstance(doc, archivo);
@@ -822,7 +807,6 @@ public void generarReporteProductoMasVendido() {
             doc.add(new Paragraph("REPORTE: PRODUCTO MÁS VENDIDO\n\n", new Font(Font.FontFamily.HELVETICA, 14, Font.BOLD)));
             doc.add(new Paragraph("Fecha de reporte: " + new SimpleDateFormat("dd/MM/yyyy").format(new Date())));
             doc.add(Chunk.NEWLINE);
-
             PdfPTable tabla = new PdfPTable(2);
             tabla.setWidthPercentage(60);
             tabla.setWidths(new float[]{4, 2});
@@ -833,12 +817,10 @@ public void generarReporteProductoMasVendido() {
             tabla.addCell(String.valueOf(cantidadMax));
             doc.add(tabla);
             doc.close();
-
             Desktop.getDesktop().open(pdfFile);
         } catch (FileNotFoundException fnfe) {
             JOptionPane.showMessageDialog(this, "El archivo está en uso. Por favor, ciérralo e intenta nuevamente.", "Archivo en uso", JOptionPane.WARNING_MESSAGE);
         }
-
     } catch (Exception e) {
         JOptionPane.showMessageDialog(this, "Error al generar reporte: " + e.getMessage());
         e.printStackTrace();
@@ -852,7 +834,6 @@ public void generarReporteProductoMenosVendido() {
             JOptionPane.showMessageDialog(this, "No hay detalles de venta registrados.");
             return;
         }
-
         HashMap<String, Integer> contadorProductos = new HashMap<>();
         for (DetalleVenta d : detalles) {
             String nombreProd = d.getProducto().getNombre();
@@ -860,15 +841,14 @@ public void generarReporteProductoMenosVendido() {
             int cantidad = d.getCantidad();
             contadorProductos.put(nombreProd, contadorProductos.getOrDefault(nombreProd, 0) + cantidad);
         }
-
         if (contadorProductos.isEmpty()) {
             JOptionPane.showMessageDialog(this, "No hay productos válidos para mostrar en el reporte.");
             return;
         }
-
         String productoMenosVendido = Collections.min(contadorProductos.entrySet(), Map.Entry.comparingByValue()).getKey();
         int cantidadMin = contadorProductos.get(productoMenosVendido);
-        String carpeta = "src/pdf/";
+
+        String carpeta = System.getProperty("user.home") + File.separator + "Downloads" + File.separator;
         String fechaHoy = new SimpleDateFormat("yyyy-MM-dd").format(new Date());
         String nombrePDF = carpeta + "producto_menos_vendido_" + fechaHoy + ".pdf";
         File pdfFile = new File(nombrePDF);
@@ -877,13 +857,10 @@ public void generarReporteProductoMenosVendido() {
             Document doc = new Document();
             PdfWriter.getInstance(doc, archivo);
             doc.open();
-            doc.add(new Paragraph("PASTELERÍA LAS DELICIAS E.I.R.L.",
-                    new Font(Font.FontFamily.HELVETICA, 16, Font.BOLD)));
-            doc.add(new Paragraph("REPORTE: PRODUCTO MENOS VENDIDO\n\n",
-                    new Font(Font.FontFamily.HELVETICA, 14, Font.BOLD)));
+            doc.add(new Paragraph("PASTELERÍA LAS DELICIAS E.I.R.L.", new Font(Font.FontFamily.HELVETICA, 16, Font.BOLD)));
+            doc.add(new Paragraph("REPORTE: PRODUCTO MENOS VENDIDO\n\n", new Font(Font.FontFamily.HELVETICA, 14, Font.BOLD)));
             doc.add(new Paragraph("Fecha de reporte: " + new SimpleDateFormat("dd/MM/yyyy").format(new Date())));
             doc.add(Chunk.NEWLINE);
-
             PdfPTable tabla = new PdfPTable(2);
             tabla.setWidthPercentage(60);
             tabla.setWidths(new float[]{4, 2});
@@ -894,12 +871,10 @@ public void generarReporteProductoMenosVendido() {
             tabla.addCell(String.valueOf(cantidadMin));
             doc.add(tabla);
             doc.close();
-
             Desktop.getDesktop().open(pdfFile);
         } catch (FileNotFoundException fnfe) {
             JOptionPane.showMessageDialog(this, "El archivo está en uso. Ciérralo e intenta nuevamente.", "Archivo en uso", JOptionPane.WARNING_MESSAGE);
         }
-
     } catch (Exception e) {
         JOptionPane.showMessageDialog(this, "Error al generar reporte: " + e.getMessage());
         e.printStackTrace();
@@ -913,7 +888,6 @@ public void generarReporteVentasPorCategoria(String nombreCategoria) {
             JOptionPane.showMessageDialog(null, "Categoría no encontrada.");
             return;
         }
-
         BDGestionarDetalleVenta daoDetalle = new BDGestionarDetalleVenta();
         ArrayList<DetalleVenta> detalles = daoDetalle.listar();
         ArrayList<DetalleVenta> detallesCategoria = new ArrayList<>();
@@ -925,7 +899,6 @@ public void generarReporteVentasPorCategoria(String nombreCategoria) {
                 montoTotal += d.getSubTotal();
             }
         }
-
         if (detallesCategoria.isEmpty()) {
             JOptionPane.showMessageDialog(null, "No hay ventas registradas para esta categoría.");
             return;
@@ -933,7 +906,7 @@ public void generarReporteVentasPorCategoria(String nombreCategoria) {
 
         String baseNombre = categoria.getNombrecat().replaceAll("\\s+", "_").toLowerCase();
         String fechaHoy = new SimpleDateFormat("yyyy-MM-dd").format(new Date());
-        String carpeta = "src/pdf/";
+        String carpeta = System.getProperty("user.home") + File.separator + "Downloads" + File.separator;
         String nombreArchivoPDF = carpeta + "reporte_categoria_" + baseNombre + "_" + fechaHoy + ".pdf";
         File pdfFile = new File(nombreArchivoPDF);
 
@@ -946,20 +919,17 @@ public void generarReporteVentasPorCategoria(String nombreCategoria) {
             doc.add(new Paragraph("Categoría: " + categoria.getNombrecat()));
             doc.add(new Paragraph("Fecha de reporte: " + new SimpleDateFormat("dd/MM/yyyy").format(new Date())));
             doc.add(Chunk.NEWLINE);
-
             PdfPTable tabla = new PdfPTable(3);
             tabla.setWidthPercentage(100);
             tabla.setWidths(new float[]{5, 2, 2});
             tabla.addCell("Producto");
             tabla.addCell("Cantidad");
             tabla.addCell("Subtotal (S/.)");
-
             for (DetalleVenta d : detallesCategoria) {
                 tabla.addCell(d.getProducto().getNombre());
                 tabla.addCell(String.valueOf(d.getCantidad()));
                 tabla.addCell(String.format("S/ %.2f", d.getSubTotal()));
             }
-
             doc.add(tabla);
             doc.add(Chunk.NEWLINE);
             Paragraph total = new Paragraph("TOTAL VENDIDO EN CATEGORÍA: S/ " + String.format("%.2f", montoTotal),
@@ -967,18 +937,15 @@ public void generarReporteVentasPorCategoria(String nombreCategoria) {
             total.setAlignment(Paragraph.ALIGN_RIGHT);
             doc.add(total);
             doc.close();
-
             Desktop.getDesktop().open(pdfFile);
         } catch (FileNotFoundException fnfe) {
             JOptionPane.showMessageDialog(null, "El archivo está en uso. Ciérralo e intenta nuevamente.", "Archivo en uso", JOptionPane.WARNING_MESSAGE);
         }
-
     } catch (Exception e) {
         JOptionPane.showMessageDialog(null, "Error al generar el reporte: " + e.getMessage());
         e.printStackTrace();
     }
 }
-
 public void generarReporteStockProductos() {
     try {
         BDGestionarProductos daoProd = new BDGestionarProductos();
@@ -989,7 +956,7 @@ public void generarReporteStockProductos() {
         }
 
         String fechaHoy = new SimpleDateFormat("yyyy-MM-dd").format(new Date());
-        String carpeta = "src/pdf/";
+        String carpeta = System.getProperty("user.home") + File.separator + "Downloads" + File.separator;
         String nombreArchivoPDF = carpeta + "reporte_stock_productos_" + fechaHoy + ".pdf";
         File pdfFile = new File(nombreArchivoPDF);
 
@@ -1001,7 +968,6 @@ public void generarReporteStockProductos() {
             doc.add(new Paragraph("REPORTE DE STOCK ACTUAL DE PRODUCTOS\n\n", new Font(Font.FontFamily.HELVETICA, 14, Font.BOLD)));
             doc.add(new Paragraph("Fecha de reporte: " + new SimpleDateFormat("dd/MM/yyyy").format(new Date())));
             doc.add(Chunk.NEWLINE);
-
             PdfPTable tabla = new PdfPTable(4);
             tabla.setWidthPercentage(100);
             tabla.setWidths(new float[]{4, 3, 2, 2});
@@ -1009,7 +975,6 @@ public void generarReporteStockProductos() {
             tabla.addCell("Categoría");
             tabla.addCell("Stock Actual");
             tabla.addCell("Precio (S/.)");
-
             ArrayList<Producto> productosPeligro = new ArrayList<>();
             for (Producto p : productos) {
                 tabla.addCell(p.getNombre());
@@ -1020,14 +985,11 @@ public void generarReporteStockProductos() {
                     productosPeligro.add(p);
                 }
             }
-
             doc.add(tabla);
-
             if (!productosPeligro.isEmpty()) {
                 doc.add(Chunk.NEWLINE);
                 doc.add(new Paragraph("PRODUCTOS POR AGOTARSE", new Font(Font.FontFamily.HELVETICA, 13, Font.BOLD, BaseColor.RED)));
                 doc.add(Chunk.NEWLINE);
-
                 PdfPTable tablaPeligro = new PdfPTable(4);
                 tablaPeligro.setWidthPercentage(100);
                 tablaPeligro.setWidths(new float[]{4, 3, 2, 2});
@@ -1035,23 +997,19 @@ public void generarReporteStockProductos() {
                 tablaPeligro.addCell("Categoría");
                 tablaPeligro.addCell("Stock");
                 tablaPeligro.addCell("Precio (S/.)");
-
                 for (Producto p : productosPeligro) {
                     tablaPeligro.addCell(p.getNombre());
                     tablaPeligro.addCell(p.getCategoriaProducto().getNombrecat());
                     tablaPeligro.addCell(String.valueOf(p.getStock()));
                     tablaPeligro.addCell(String.format("S/ %.2f", p.getPrecioUnitario()));
                 }
-
                 doc.add(tablaPeligro);
             }
-
             doc.close();
             Desktop.getDesktop().open(pdfFile);
         } catch (FileNotFoundException fnfe) {
             JOptionPane.showMessageDialog(null, "El archivo está en uso. Ciérralo e intenta nuevamente.", "Archivo en uso", JOptionPane.WARNING_MESSAGE);
         }
-
     } catch (Exception e) {
         JOptionPane.showMessageDialog(null, "Error al generar reporte: " + e.getMessage());
         e.printStackTrace();

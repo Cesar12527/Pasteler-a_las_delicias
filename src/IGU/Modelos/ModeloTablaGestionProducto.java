@@ -28,7 +28,7 @@ public class ModeloTablaGestionProducto extends AbstractTableModel{
     
     @Override
     public int getColumnCount() {
-        return 6;    
+        return 5;    
     }
         public String getColumnName (int column){
         String nombreCol = "";
@@ -37,9 +37,8 @@ public class ModeloTablaGestionProducto extends AbstractTableModel{
             case 0 : nombreCol = "Nombre"; break;           
             case 1 : nombreCol = "Categoria"; break;
             case 2 : nombreCol = "Descripcion"; break;
-            case 3 : nombreCol = "Unidad medida"; break;
-            case 4 : nombreCol = "PrecioU"; break;
-            case 5 : nombreCol = "Stock"; break;
+            case 3 : nombreCol = "PrecioU"; break;
+            case 4 : nombreCol = "Stock"; break;
             
             default:
                 throw new AssertionError();
@@ -62,9 +61,8 @@ public class ModeloTablaGestionProducto extends AbstractTableModel{
             case 2 : celda = (objP.getCategoriaProducto() != null) 
                         ? objP.getCategoriaProducto().getDescripcion()
                         : "Sin descripción"; break;
-            case 3 : celda = objP.getUnidadMedida(); break;
-            case 4 : celda = objP.getPrecioUnitario(); break;
-            case 5 : celda = objP.getStock(); break;
+            case 3 : celda = objP.getPrecioUnitario(); break;
+            case 4 : celda = objP.getStock(); break;
             
             default:
                 throw new AssertionError();

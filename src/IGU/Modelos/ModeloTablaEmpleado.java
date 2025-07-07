@@ -62,7 +62,7 @@ public class ModeloTablaEmpleado extends AbstractTableModel{
             case 3 : celda = objP.getTelefono(); break;
             case 4 : celda = objP.getCorreo(); break;
             case 5 : celda = objP.getEstado(); break;
-            case 6 : celda = objP.getUsuario().getTiporol(); break;
+            case 6 : celda = objP.getUsuario(); break;
 
             
             default:

@@ -2,12 +2,14 @@
 package IGU;
 
 
+import java.awt.Color;
 import javax.swing.JOptionPane;
 
 public class MDI_MenuPrincipal extends javax.swing.JFrame {
     
     public MDI_MenuPrincipal() {
         initComponents();
+        desktopPane.setBackground(Color.WHITE);
         this.setLocationRelativeTo(null);
     }
 
@@ -16,6 +18,10 @@ public class MDI_MenuPrincipal extends javax.swing.JFrame {
     private void initComponents() {
 
         desktopPane = new javax.swing.JDesktopPane();
+        jLabel1 = new javax.swing.JLabel();
+        jLabel2 = new javax.swing.JLabel();
+        jLabel3 = new javax.swing.JLabel();
+        jLabel4 = new javax.swing.JLabel();
         menuBar = new javax.swing.JMenuBar();
         jM_Productos = new javax.swing.JMenu();
         MI_Productos = new javax.swing.JMenuItem();
@@ -38,8 +44,29 @@ public class MDI_MenuPrincipal extends javax.swing.JFrame {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
+        desktopPane.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(102, 51, 0), 2));
         desktopPane.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
 
+        jLabel1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/IGU/logoGrande.png"))); // NOI18N
+        jLabel1.setText("jLabel1");
+        desktopPane.add(jLabel1);
+        jLabel1.setBounds(50, 90, 540, 350);
+
+        jLabel2.setIcon(new javax.swing.ImageIcon(getClass().getResource("/IGU/centro.png"))); // NOI18N
+        desktopPane.add(jLabel2);
+        jLabel2.setBounds(30, 200, 90, 90);
+
+        jLabel3.setIcon(new javax.swing.ImageIcon(getClass().getResource("/IGU/centro.png"))); // NOI18N
+        desktopPane.add(jLabel3);
+        jLabel3.setBounds(550, 190, 90, 90);
+
+        jLabel4.setIcon(new javax.swing.ImageIcon(getClass().getResource("/IGU/centro.png"))); // NOI18N
+        desktopPane.add(jLabel4);
+        jLabel4.setBounds(310, 0, 90, 90);
+
+        menuBar.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(102, 51, 0), 2));
+
+        jM_Productos.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(51, 0, 0)));
         jM_Productos.setMnemonic('e');
         jM_Productos.setText("Productos");
 
@@ -71,6 +98,7 @@ public class MDI_MenuPrincipal extends javax.swing.JFrame {
 
         menuBar.add(jM_Productos);
 
+        jM_Ventas.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(51, 0, 0)));
         jM_Ventas.setText("Ventas");
 
         MI_RealizarVenta.setText("Realizar Venta");
@@ -99,6 +127,7 @@ public class MDI_MenuPrincipal extends javax.swing.JFrame {
 
         menuBar.add(jM_Ventas);
 
+        jM_Caja1.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(51, 0, 0)));
         jM_Caja1.setText("Empleados");
 
         MI_Empleados.setText("Empleados");
@@ -119,6 +148,7 @@ public class MDI_MenuPrincipal extends javax.swing.JFrame {
 
         menuBar.add(jM_Caja1);
 
+        jM_Clientes.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(51, 0, 0)));
         jM_Clientes.setText("Clientes");
 
         MI_Clientes.setMnemonic('p');
@@ -132,6 +162,7 @@ public class MDI_MenuPrincipal extends javax.swing.JFrame {
 
         menuBar.add(jM_Clientes);
 
+        jM_Reportes.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(51, 0, 0)));
         jM_Reportes.setText("Reportes");
 
         MI_Reportes.setMnemonic('p');
@@ -145,6 +176,7 @@ public class MDI_MenuPrincipal extends javax.swing.JFrame {
 
         menuBar.add(jM_Reportes);
 
+        jM_CerrarSesion.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(51, 0, 0)));
         jM_CerrarSesion.setMnemonic('f');
         jM_CerrarSesion.setText("Cerrar sesion");
 
@@ -174,11 +206,16 @@ public class MDI_MenuPrincipal extends javax.swing.JFrame {
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(desktopPane, javax.swing.GroupLayout.DEFAULT_SIZE, 1124, Short.MAX_VALUE)
+            .addGroup(layout.createSequentialGroup()
+                .addComponent(desktopPane, javax.swing.GroupLayout.PREFERRED_SIZE, 698, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(0, 12, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(desktopPane, javax.swing.GroupLayout.DEFAULT_SIZE, 613, Short.MAX_VALUE)
+            .addGroup(layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(desktopPane, javax.swing.GroupLayout.PREFERRED_SIZE, 489, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(10, Short.MAX_VALUE))
         );
 
         pack();
@@ -366,6 +403,10 @@ public class MDI_MenuPrincipal extends javax.swing.JFrame {
     private javax.swing.JMenuItem MI_Salir;
     private javax.swing.JMenuItem MI_TablaVentas;
     private javax.swing.JDesktopPane desktopPane;
+    private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel2;
+    private javax.swing.JLabel jLabel3;
+    private javax.swing.JLabel jLabel4;
     private javax.swing.JMenu jM_Caja1;
     private javax.swing.JMenu jM_CerrarSesion;
     private javax.swing.JMenu jM_Clientes;
